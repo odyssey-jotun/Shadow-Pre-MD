@@ -43,3 +43,15 @@ Styles live in `styles.css`. `guide.html` is hand-written.
 - Each page carries JSON-LD (`WebSite`, `Person`, plus `WebPage` or `Article` and `BreadcrumbList`).
 - Headings target searches such as "how to shadow a doctor in high school" and "what to do when shadowing a doctor".
 - After a custom domain is added, update `SITE` in `build.py`, `sitemap.xml` and `robots.txt`.
+
+## Photos
+
+Every page's hero is a photograph of people. This is a standing rule: no data panels or graphics in the hero.
+
+| File | Used on | Source |
+| --- | --- | --- |
+| `images/hero-physicians-*.webp` | Home hero | StockSnap `0DCSAGJ9CM`, CC0 |
+| `images/hero-reviewing-scan-*.webp` | Results hero | StockSnap `GSBJXWRSDV`, CC0 |
+| `images/hero-zoha-*.webp`, `images/zoha-*.webp` | Survey hero, About section | Zoha's own photo |
+
+The two stock photos are stand-ins. Replace them with photos of Zoha shadowing if she has any.

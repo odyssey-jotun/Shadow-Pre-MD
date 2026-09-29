@@ -97,6 +97,16 @@ def css():
     return CSS
 
 
+HERO_SIZES = "(max-width: 860px) calc(100vw - 40px), 500px"
+
+
+def hero_photo(name, alt, credit=""):
+    cap = f'<figcaption>{credit}</figcaption>' if credit else ""
+    return (f'<figure class="hero-photo"><img src="images/{name}-960.webp" '
+            f'srcset="images/{name}-600.webp 600w, images/{name}-800.webp 800w, images/{name}-960.webp 960w" sizes="{HERO_SIZES}" '
+            f'width="960" height="640" alt="{alt}" fetchpriority="high" decoding="async">{cap}</figure>')
+
+
 PERSON = {
     "@type": "Person",
     "@id": SITE + "#zoha",
@@ -107,7 +117,7 @@ PERSON = {
 }
 
 
-def head(title, desc, path="", schema=None):
+def head(title, desc, path="", schema=None, hero=None):
     import json
     url = SITE + path
     graph = [{
@@ -115,6 +125,10 @@ def head(title, desc, path="", schema=None):
         "description": "A free guide to medical shadowing for high school students.",
         "author": {"@id": SITE + "#zoha"}, "inLanguage": "en-US"}, PERSON]
     graph += schema or []
+    preload = ""
+    if hero:
+        preload = (f'<link rel="preload" as="image" type="image/webp" href="images/{hero}-960.webp" '
+                   f'imagesrcset="images/{hero}-600.webp 600w, images/{hero}-800.webp 800w, images/{hero}-960.webp 960w" imagesizes="{HERO_SIZES}" fetchpriority="high">\n')
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, separators=(",", ":"))
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -138,7 +152,7 @@ def head(title, desc, path="", schema=None):
 <meta property="og:image:alt" content="Shadow Pre-MD: a free medical shadowing guide for high school students">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preload" href="fonts/newsreader-normal.woff2" as="font" type="font/woff2" crossorigin>
+{preload}<link rel="preload" href="fonts/newsreader-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/dm-sans-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>{css()}</style>
 <script type="application/ld+json">{ld}</script>
@@ -394,7 +408,7 @@ def index():
     handbook = RESOURCES[0][1]
     t, d = ("How to Shadow a Doctor in High School | Shadow Pre-MD",
             "A free guide to shadowing a doctor in high school: how to prepare, what to watch, and which questions to ask. Built from a survey of 43 physicians.")
-    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"})]) + nav("index.html") + f"""
+    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"})], hero="hero-physicians") + nav("index.html") + f"""
 <main id="main">
 
 <header class="hero">
@@ -408,15 +422,7 @@ def index():
         <a href="survey.html" class="btn ghost">See the physician survey</a>
       </div>
     </div>
-    <aside class="hero-panel" aria-label="Headline survey findings">
-      <span class="eyebrow">What 43 physicians said</span>
-      <ul class="hp-rows">
-        <li><div class="top"><span class="n">{pct(likely_hi)}%</span><span class="t">would likely host a high school student if the right resources were in place</span></div><div class="track"><span class="fill" style="width:{pct(likely_hi)}%"></span></div></li>
-        <li><div class="top"><span class="n">{pct(handbook)}%</span><span class="t">want students to arrive with an orientation handbook</span></div><div class="track"><span class="fill" style="width:{pct(handbook)}%"></span></div></li>
-        <li><div class="top"><span class="n">{pct(FACTORS[1][1])}%</span><span class="t">said the ability to ask questions is what makes shadowing meaningful</span></div><div class="track"><span class="fill" style="width:{pct(FACTORS[1][1])}%"></span></div></li>
-      </ul>
-      <p class="src">Source: physician survey, 2026. <a href="results.html">See every answer</a></p>
-    </aside>
+    {hero_photo("hero-physicians", "Two physicians in white coats laughing with two colleagues in scrubs as they review a chart together")}
   </div>
 </header>
 
@@ -673,11 +679,12 @@ def survey():
     t, d = ("Physician Shadowing Survey: What 43 Doctors Said | Shadow Pre-MD",
             "A survey of 43 physicians on high school shadowing: why doctors say no, what makes a shadowing day meaningful, and what they want students to know.")
     return head(t, d, "survey.html", [page_schema("Article", "survey.html", "Physician Shadowing Survey: What 43 Doctors Said", d,
-                {"image": SITE + "images/og.jpg", "publisher": {"@id": SITE + "#zoha"}}), crumbs("Physician Survey", "survey.html")]) + nav("survey.html") + f"""
+                {"image": SITE + "images/og.jpg", "publisher": {"@id": SITE + "#zoha"}}), crumbs("Physician Survey", "survey.html")], hero="hero-zoha") + nav("survey.html") + f"""
 <main id="main">
 
 <header class="page-hero">
-  <div class="wrap">
+  <div class="wrap split">
+    <div>
     <span class="eyebrow">The physician survey</span>
     <h1>I asked 43 physicians about letting high school students shadow them</h1>
     <p class="lede">Students can't fix a problem nobody has measured. So I surveyed practicing physicians about what stops them from hosting high schoolers, what makes a shadowing day worth it, and what would help. Here is what they told me.</p>
@@ -685,6 +692,8 @@ def survey():
       <a href="guide.html" class="btn">Get the free guide</a>
       <a href="results.html" class="btn ghost">See every question and answer</a>
     </div>
+    </div>
+    {hero_photo("hero-zoha", "Zoha Waheed, the high school student who ran the physician shadowing survey, standing outdoors")}
   </div>
 </header>
 
@@ -915,11 +924,12 @@ def results():
     t, d = ("Physician Shadowing Survey Results by Question | Shadow Pre-MD",
             "Every question from a survey of 43 physicians on high school medical shadowing, with the count and share for each answer and a split by hosting experience.")
     return head(t, d, "results.html", [page_schema("Article", "results.html", "Physician Shadowing Survey Results by Question", d,
-                {"image": SITE + "images/og.jpg", "publisher": {"@id": SITE + "#zoha"}}), crumbs("Survey Results", "results.html")]) + nav("results.html") + f"""
+                {"image": SITE + "images/og.jpg", "publisher": {"@id": SITE + "#zoha"}}), crumbs("Survey Results", "results.html")], hero="hero-reviewing-scan") + nav("results.html") + f"""
 <main id="main">
 
 <header class="page-hero">
-  <div class="wrap">
+  <div class="wrap split">
+    <div>
     <span class="eyebrow">Survey results</span>
     <h1>Physician shadowing survey results, question by question</h1>
     <p class="lede">Each chart below shows one survey question with the count and share for every answer. The second half breaks the answers down by whether the physician had hosted a student before.</p>
@@ -927,6 +937,8 @@ def results():
       <a href="survey.html" class="btn ghost">Read the survey findings</a>
       <a href="guide.html" class="btn">Get the free guide</a>
     </div>
+    </div>
+    {hero_photo("hero-reviewing-scan", "Three clinicians in scrubs standing together and studying an X-ray")}
   </div>
 </header>
 
