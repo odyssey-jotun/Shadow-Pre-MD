@@ -8,15 +8,28 @@ https://odyssey-jotun.github.io/Shadow-Pre-MD/
 
 The repository is public and GitHub Pages serves `main` at root. Pushing to `main` redeploys.
 
+## Pages
+
+| Page | What it is |
+| --- | --- |
+| `index.html` | StoryBrand landing page: header, problem (three icons with stats), guide (Zoha, first person), plan, proof, call to action |
+| `survey.html` | The survey explained: who answered, five findings with charts, limitations |
+| `results.html` | Every question with the count and share for each answer, plus the split by hosting experience |
+| `guide.html` | Holding page for the guide download |
+
+## Editing
+
+`index.html`, `survey.html` and `results.html` are generated. Change the numbers or copy in `build.py`, then run:
+
+    python3 build.py
+
+Styles live in `styles.css`. `guide.html` is hand-written.
+
 ## Status
 
-- The guide PDF does not exist yet. Every "Get the free guide" button points to `guide.html`, a holding page. When the PDF is ready, put it in `downloads/` and point those links at it.
+- The guide PDF does not exist yet. Every "Get the free guide" button points to `guide.html`. When the PDF is ready, put it in `downloads/` and point those links at it.
 - The site is `noindex,nofollow` (meta tag plus `robots.txt`) until the guide is published.
-- Survey figures come from Zoha's abstract, "Physician Perspectives on High School Shadowing", submitted to the 2027 Medical Education Innovation Conference. Submitted, not yet accepted.
-- Works cited lists only sources whose citation details were confirmed against Crossref.
-
-## Files
-
-- `index.html`: the whole site, styles inline.
-- `guide.html`: holding page for the guide download.
-- `images/zoha.webp`: Zoha's photo, cropped and scaled to 1000x1250.
+- The survey's raw responses were not available when the site was built. All figures come from the tabulated counts and from the abstract. Questions 2, 3 and 5 on the results page are incomplete for that reason.
+- Question wording on the results page follows Zoha's draft question list and should be checked against the final Google Form.
+- The abstract is submitted to the 2027 Medical Education Innovation Conference, not yet accepted.
+- "Willing to host" is reported as 72% (rated 4 or 5). The abstract's "over 90%" counts ratings of 3 and up.
