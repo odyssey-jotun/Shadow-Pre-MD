@@ -408,7 +408,7 @@ def index():
     handbook = RESOURCES[0][1]
     t, d = ("How to Shadow a Doctor in High School | Shadow Pre-MD",
             "A free guide to shadowing a doctor in high school: how to prepare, what to watch, and which questions to ask. Built from a survey of 43 physicians.")
-    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"})], hero="hero-physicians") + nav("index.html") + f"""
+    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"})], hero="hero-student-doctor") + nav("index.html") + f"""
 <main id="main">
 
 <header class="hero">
@@ -422,7 +422,7 @@ def index():
         <a href="survey.html" class="btn ghost">See the physician survey</a>
       </div>
     </div>
-    {hero_photo("hero-physicians", "Two physicians in white coats laughing with two colleagues in scrubs as they review a chart together")}
+    {hero_photo("hero-student-doctor", "A young man in blue scrubs looking on as a physician in a white coat walks him through a chart on a tablet")}
   </div>
 </header>
 
@@ -938,7 +938,7 @@ def results():
       <a href="guide.html" class="btn">Get the free guide</a>
     </div>
     </div>
-    {hero_photo("hero-reviewing-scan", "Three clinicians in scrubs standing together and studying an X-ray")}
+    {hero_photo("hero-reviewing-scan", "A young trainee in a white coat watching over a physician's shoulder as she points out a brain scan on a monitor")}
   </div>
 </header>
 

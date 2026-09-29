@@ -50,8 +50,8 @@ Every page's hero is a photograph of people. This is a standing rule: no data pa
 
 | File | Used on | Source |
 | --- | --- | --- |
-| `images/hero-physicians-*.webp` | Home hero | StockSnap `0DCSAGJ9CM`, CC0 |
-| `images/hero-reviewing-scan-*.webp` | Results hero | StockSnap `GSBJXWRSDV`, CC0 |
+| `images/hero-student-doctor-*.webp` | Home hero | Unsplash `i8dHi584lFs`, Unsplash licence (free, no credit required) |
+| `images/hero-reviewing-scan-*.webp` | Results hero | Unsplash `5VkNa1LrS8A`, Unsplash licence (free, no credit required) |
 | `images/hero-zoha-*.webp`, `images/zoha-*.webp` | Survey hero, About section | Zoha's own photo |
 
-The two stock photos are stand-ins. Replace them with photos of Zoha shadowing if she has any.
+The two stock photos are stand-ins showing young adults, the closest free match to a student shadowing a doctor. No free photo of a high school student in scrubs was found. Replace them with photos of Zoha shadowing if she has any.
