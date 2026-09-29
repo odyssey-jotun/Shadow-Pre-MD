@@ -13,7 +13,7 @@ The repository is public and GitHub Pages serves `main` at root. Pushing to `mai
 | Page | What it is |
 | --- | --- |
 | `index.html` | StoryBrand landing page: header, problem (three icons with stats), guide (Zoha, first person), plan, proof, call to action |
-| `survey.html` | The survey explained: who answered, five findings with charts, limitations |
+| `survey.html` | The survey in six numbered sections. Each has a lead paragraph in Zoha's voice, three stat cards, a donut beside a bar chart, and a pull-quote band. Modelled on the survey layout in Deven Patel's mountain biking guide (arbiketrails.com) |
 | `results.html` | Every question with the count and share for each answer, plus the split by hosting experience |
 | `guide.html` | Holding page for the guide download |
 
@@ -33,3 +33,4 @@ Styles live in `styles.css`. `guide.html` is hand-written.
 - Question wording on the results page follows Zoha's draft question list and should be checked against the final Google Form.
 - The abstract is submitted to the 2027 Medical Education Innovation Conference, not yet accepted.
 - "Willing to host" is reported as 72% (rated 4 or 5). The abstract's "over 90%" counts ratings of 3 and up.
+- Pull quotes credited to Zoha on the survey page are her own words from her brand script. Uncredited bands state a survey finding.

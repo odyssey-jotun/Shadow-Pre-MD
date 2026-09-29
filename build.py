@@ -567,9 +567,54 @@ def index():
 
 
 # ---------------------------------------------------------------- survey
+def sec(num, title, kicker, lead):
+    return f"""<div class="sec-head">
+      <span class="sec-num" aria-hidden="true">{num}</span>
+      <div><h2>{title}</h2><p class="kicker">{kicker}</p></div>
+    </div>
+    <p class="lead">{lead}</p>"""
+
+
+def stats(items):
+    tones = ("rust", "teal", "gold")
+    out = ['<ul class="stats">']
+    for i, (n, t) in enumerate(items):
+        out.append(f'  <li class="{tones[i % 3]}"><span class="n">{n}</span><span class="t">{t}</span></li>')
+    out.append("</ul>")
+    return "\n".join(out)
+
+
+def donut(segments, center, caption, label):
+    """segments: [(name, count, colour)]. Drawn clockwise from 12 o'clock."""
+    total = sum(n for _, n, _ in segments)
+    r, circ = 54, 2 * 3.14159265 * 54
+    arcs, legend, off = [], [], 0.0
+    for name, n, col in segments:
+        length = circ * n / total
+        arcs.append(f'<circle cx="70" cy="70" r="{r}" fill="none" stroke="{col}" stroke-width="22" '
+                    f'stroke-dasharray="{max(length - 2.5, 0):.2f} {circ - max(length - 2.5, 0):.2f}" '
+                    f'stroke-dashoffset="{-off:.2f}"/>')
+        legend.append(f'<li><span class="sw" style="background:{col}"></span>{name} ({n})</li>')
+        off += length
+    return (f'<div class="donut"><svg viewBox="0 0 140 140" role="img" aria-label="{label}">'
+            f'<g transform="rotate(-90 70 70)">{"".join(arcs)}</g></svg>'
+            f'<div class="mid"><span class="n">{center}</span><span class="t">{caption}</span></div></div>'
+            f'<ul class="legend center">{"".join(legend)}</ul>')
+
+
+def quote(text, who=""):
+    cite = f"<cite>{who}</cite>" if who else ""
+    return f'<blockquote class="band-quote"><p>{text}</p>{cite}</blockquote>'
+
+
+DK, MID, GREY = "#0F4C5C", "#008A9E", "#A9B9C1"
+
+
 def survey():
     useful_hi = USEFUL[3] + USEFUL[4]
     likely_hi = LIKELY[3] + LIKELY[4]
+    b = dict((l, (t, nv, hs)) for l, t, nv, hs in BARRIERS)
+    time_n = b["Lack of physician time"][0]
     return head("The Physician Survey | Shadow Pre-MD",
                 "What 43 practicing physicians said about hosting high school students: the barriers, the resources they want, and what makes shadowing meaningful.") + nav("survey.html") + f"""
 <main id="main">
@@ -577,52 +622,159 @@ def survey():
 <header class="page-hero">
   <div class="wrap">
     <span class="eyebrow">The physician survey</span>
-    <h1>43 physicians on what makes shadowing work</h1>
-    <p class="lede">I surveyed practicing physicians to learn what makes high school shadowing educational, what stops physicians from hosting, and whether a standard structure would help. This page walks through what they said.</p>
+    <h1>I asked 43 physicians why shadowing is so hard to get right</h1>
+    <p class="lede">Students can't fix a problem nobody has measured. So I surveyed practicing physicians about what stops them from hosting high schoolers, what makes a shadowing day worth it, and what would help. Here is what they told me.</p>
     <div class="btn-row">
-      <a href="results.html" class="btn">See every question and answer</a>
-      <a href="guide.html" class="btn ghost">Get the free guide</a>
+      <a href="guide.html" class="btn">Get the free guide</a>
+      <a href="results.html" class="btn ghost">See every question and answer</a>
     </div>
-    <ul class="strip four">
-      <li><span class="n">{N}</span><span class="t">physicians responded</span></li>
-      <li><span class="n">{pct(useful_hi)}%</span><span class="t">rated standardized guidelines highly useful</span></li>
-      <li><span class="n">{pct(likely_hi)}%</span><span class="t">would likely host with the right resources</span></li>
-      <li><span class="n">{pct(34)}%</span><span class="t">named time as a barrier</span></li>
-    </ul>
   </div>
 </header>
 
-<section class="band" id="questions">
+<section class="band" id="open">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">What I wanted to know</span>
-      <h2>Six questions behind the survey</h2>
+    {sec("01", "The Door Is Open", "Physicians want to teach",
+         "Most of the physicians I surveyed want students in their clinics. More than half chose the highest possible rating when I asked how likely they would be to host a student with the right support. The willingness is already there. Everything around it is missing.")}
+    {stats([(f"{pct(likely_hi)}%", "would likely host a high school student if the right resources were available."),
+            (f"{pct(useful_hi)}%", "rated standardized shadowing guidelines a 4 or 5 out of 5 for usefulness."),
+            (f"{LIKELY[4]} of {N}", "chose the top rating of 5 on each of the two questions.")])}
+    <div class="charts duo">
+      <figure class="chart">
+        <h3>Likelihood of hosting with resources</h3>
+        <p class="sub">Rating out of 5, all 43 physicians</p>
+        {donut([("Rating 5", LIKELY[4], DK), ("Rating 4", LIKELY[3], MID), ("Rating 3 or lower", sum(LIKELY[:3]), GREY)],
+               f"{pct(likely_hi)}%", "rated 4 or 5", "72 percent of physicians rated their likelihood of hosting a 4 or 5")}
+      </figure>
+      <figure class="chart">
+        <h3>Usefulness of standardized guidelines</h3>
+        <p class="sub">Number of physicians choosing each rating</p>
+        {columns(USEFUL, "Not useful", "Very useful")}
+      </figure>
     </div>
-    <ol class="qlist">
-      <li>What prevents physicians from hosting high school students?</li>
-      <li>What do physicians believe makes shadowing educational?</li>
-      <li>Which resources would make hosting easier?</li>
-      <li>How useful do physicians find standardized shadowing guidelines?</li>
-      <li>Would physicians be more likely to host if those resources existed?</li>
-      <li>Do physicians who have hosted see shadowing differently from those who never have?</li>
-    </ol>
+    {quote("High school students shouldn't have to endlessly email physicians with no hope of finding any shadowing opportunities.", "Zoha Waheed")}
+  </div>
+</section>
+
+<section id="barriers">
+  <div class="wrap">
+    {sec("02", "What Stands in the Way", "Time, structure, and red tape",
+         "When I asked what gets in the way, time came first. A physician with a full clinic has few minutes to spare. Look past time, though, and the next four barriers all describe the same gap: no program to follow, unclear hospital policies, and no guidance on privacy or liability. A well-built program can close that gap.")}
+    {stats([(f"{pct(time_n)}%", f"named lack of physician time, the most common barrier ({time_n} of {N})."),
+            (f"{pct(24)}%", "said no formal shadowing structure exists for them to follow."),
+            ("22 + 22", "named hospital policies and patient privacy, tied for third.")])}
+    <div class="charts duo">
+      <figure class="chart">
+        <h3>The leading barrier</h3>
+        <p class="sub">Physicians naming lack of time</p>
+        {donut([("Named time", time_n, "#C2571F"), ("Did not", N - time_n, GREY)],
+               f"{pct(time_n)}%", "short on time", "79 percent of physicians named lack of time as a barrier")}
+      </figure>
+      <figure class="chart">
+        <h3>Every barrier physicians named</h3>
+        <p class="sub">Share of 43 physicians selecting each</p>
+        {bars([(l, t) for l, t, *_ in BARRIERS] + [BARRIERS_OTHER], hl=("Lack of physician time",), muted=("Other",))}
+      </figure>
+    </div>
+    {quote("The four most common barriers after time all come down to missing rules and structure, and that is a problem someone can solve.")}
+  </div>
+</section>
+
+<section class="band" id="never">
+  <div class="wrap">
+    {sec("03", "Who Stays Out", "The 16 physicians who have never hosted",
+         "Sixteen of the physicians I surveyed had never hosted a high school student. They are the doctors students most need to reach, so I looked at what holds them back. Hospital policies and doubts about student preparedness worried them far more than they worried experienced hosts.")}
+    {stats([("75%", "of never-hosts named hospital policies, against 37% of experienced hosts."),
+            ("56%", "of never-hosts named student preparedness, against 22% of experienced hosts."),
+            ("3.50", "average likelihood of hosting among never-hosts, against 4.56 for experienced hosts.")])}
+    <figure class="chart">
+      <h3>Barriers by hosting experience</h3>
+      <p class="sub">Share of each group naming the barrier, sorted by the size of the gap</p>
+      {dumbbell(BARRIERS)}
+      <p class="foot">Only the top two gaps reach p &lt; .05 on a Fisher exact test (policies p = .027, preparedness p = .045), and no correction was made for running eight comparisons.</p>
+    </figure>
+    <div class="charts" style="margin-top:20px">
+      <figure class="chart">
+        <h3>Guidelines and willingness to host</h3>
+        <p class="sub">Spearman correlation, by group</p>
+        {rho_bars()}
+      </figure>
+      <figure class="chart">
+        <h3>Likelihood of hosting with resources</h3>
+        <p class="sub">Average rating out of 5, by group</p>
+        <ul class="bars">
+          <li class="hl" title="Never hosted: 3.50"><div class="lab"><span>Never hosted</span><span class="val"><b>3.50</b></span></div><div class="track"><span class="fill" style="width:70%"></span></div></li>
+          <li title="Has hosted: 4.56"><div class="lab"><span>Has hosted</span><span class="val"><b>4.56</b></span></div><div class="track"><span class="fill" style="width:91.2%"></span></div></li>
+        </ul>
+        <p class="foot">Both groups rated guidelines about equally useful (4.13 and 4.33).</p>
+      </figure>
+    </div>
+    {quote("Among physicians who had never hosted a student, the ones who saw the most value in clear guidelines were the most willing to say yes.")}
+  </div>
+</section>
+
+<section id="meaning">
+  <div class="wrap">
+    {sec("04", "What Makes a Day Meaningful", "Questions over procedures",
+         "Students often assume the best shadowing day is the one with the most dramatic procedure. Physicians see it differently. They told me the value comes from watching patient care up close and asking about it.")}
+    {stats([(f"{FACTORS[0][1]} of {N}", "chose direct observation of patient care as a top factor."),
+            (f"{FACTORS[1][1]} of {N}", "chose the ability to ask questions."),
+            (f"{FACTORS[7][1]} of {N}", "chose exposure to medical procedures.")])}
+    <div class="charts duo">
+      <figure class="chart">
+        <h3>The top factor</h3>
+        <p class="sub">Physicians choosing direct observation</p>
+        {donut([("Chose it", FACTORS[0][1], MID), ("Did not", N - FACTORS[0][1], GREY)],
+               f"{pct(FACTORS[0][1])}%", "direct observation", "70 percent of physicians chose direct observation of patient care")}
+      </figure>
+      <figure class="chart">
+        <h3>Factors physicians called most important</h3>
+        <p class="sub">Share of 43 physicians selecting each</p>
+        {bars(FACTORS, hl=("Ability to ask questions",), muted=("Exposure to medical procedures",))}
+      </figure>
+    </div>
+    {quote("Even with shadowing opportunities, it was difficult to find a way to maximize their usefulness.", "Zoha Waheed")}
+  </div>
+</section>
+
+<section class="band" id="asked">
+  <div class="wrap">
+    {sec("05", "What Physicians Asked For", "Prepared students and clear rules",
+         "I asked physicians what would make hosting easier. Their top answer was a student who arrives already oriented. That answer is why Shadow Pre-MD exists. Preparation is the one part of this problem a student can solve alone.")}
+    {stats([(f"{pct(RESOURCES[0][1])}%", "asked for a student orientation program or handbook."),
+            (f"{pct(RESOURCES[1][1])}%", "asked for clear institutional guidelines on what students may observe."),
+            (f"{pct(RESOURCES[2][1])}%", "asked for suggested questions or discussion topics.")])}
+    <div class="charts duo">
+      <figure class="chart">
+        <h3>The top request</h3>
+        <p class="sub">Physicians asking for a student handbook</p>
+        {donut([("Asked for it", RESOURCES[0][1], DK), ("Did not", N - RESOURCES[0][1], GREY)],
+               f"{pct(RESOURCES[0][1])}%", "want a handbook", "65 percent of physicians asked for a student orientation handbook")}
+      </figure>
+      <figure class="chart">
+        <h3>Every resource physicians requested</h3>
+        <p class="sub">Share of 43 physicians selecting each</p>
+        {bars(RESOURCES, hl=("Student orientation program or handbook",))}
+      </figure>
+    </div>
+    <h3 class="sub-h">Each barrier, beside the resource meant to solve it</h3>
+    {pairs()}
+    {quote("I promise if you read through our guide and follow its steps, you will be able to take away something useful from your shadowing.", "Zoha Waheed")}
   </div>
 </section>
 
 <section id="sample">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Who answered</span>
-      <h2>The 43 physicians behind the numbers</h2>
-      <p>The survey was cross-sectional and completed online. Most respondents practiced internal medicine, and 85% worked in a field that involves procedures. Nearly half had practiced for five to ten years.</p>
-    </div>
+    {sec("06", "Who Answered", "Read these numbers with care",
+         "I want these results read honestly. Forty-three physicians is enough to see patterns and too few to speak for every doctor. Most of my respondents practiced internal medicine, and physicians who answer a survey about shadowing may already care more about teaching.")}
+    {stats([(f"{N}", "practicing physicians completed the survey."),
+            (f"{HOSTS}", "had hosted a high school student before."),
+            (f"{NEVER}", "had never hosted one.")])}
     <div class="charts">
       <figure class="chart">
         <h3>Hosting experience</h3>
         <p class="sub">Each mark is one physician</p>
         {LEGEND}
         {waffle()}
-        <p class="foot">{HOSTS} of {N} ({pct(HOSTS)}%) had supervised a high school student before. {NEVER} ({pct(NEVER)}%) never had.</p>
       </figure>
       <figure class="chart">
         <h3>Specialty</h3>
@@ -630,101 +782,34 @@ def survey():
         {bars(SPECIALTY, muted=("Other or not tabulated",))}
       </figure>
     </div>
-    <figure class="chart stack">
-      <h3>Practice setting</h3>
-      <p class="sub">Share of physicians in each setting, as reported in the abstract</p>
-      {pbars(SETTING)}
-    </figure>
-  </div>
-</section>
-
-<section class="band" id="findings">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">What the data shows</span>
-      <h2>Five findings</h2>
-      <p>Physicians came across as willing. The friction sits in time, structure, and unclear rules.</p>
-    </div>
-
-    <div class="finding">
-      <h3>1. Most physicians would host, given support</h3>
-      <p>More than half of the sample chose the highest rating on both scales. Nobody rated standardized guidelines a 1.</p>
-      <div class="charts">
-        <figure class="chart">
-          <h3>Usefulness of standardized guidelines</h3>
-          <p class="sub">Number of physicians choosing each rating</p>
-          {columns(USEFUL, "Not useful", "Very useful")}
-        </figure>
-        <figure class="chart">
-          <h3>Likelihood of hosting with resources</h3>
-          <p class="sub">Number of physicians choosing each rating</p>
-          {columns(LIKELY, "Not likely", "Very likely")}
-        </figure>
-      </div>
-    </div>
-
-    <div class="finding">
-      <h3>2. Time leads the barriers, and structure follows close behind</h3>
-      <p>Four of the five most common barriers concern rules and structure, which a well-designed program could address.</p>
-      <figure class="chart">
-        <h3>Barriers to a meaningful shadowing experience</h3>
-        <p class="sub">Share of 43 physicians selecting each barrier</p>
-        {bars([(l, t) for l, t, *_ in BARRIERS] + [BARRIERS_OTHER], muted=("Other",))}
-      </figure>
-    </div>
-
-    <div class="finding">
-      <h3>3. Physicians who have never hosted worry about different things</h3>
-      <p>Never-hosts were far more likely to name hospital policies and student preparedness. Experienced hosts were more likely to name scheduling. Uncertainty seems to keep physicians out, while logistics wear on the ones already in.</p>
-      <figure class="chart">
-        <h3>Barriers by hosting experience</h3>
-        <p class="sub">Share of each group naming the barrier, sorted by the size of the gap</p>
-        {dumbbell(BARRIERS)}
-        <p class="foot">Only the top two gaps reach p &lt; .05 on a Fisher exact test (policies p = .027, preparedness p = .045), and no correction was made for running eight comparisons.</p>
-      </figure>
-    </div>
-
-    <div class="finding">
-      <h3>4. Guidelines matter most to the physicians outside the system</h3>
-      <p>Physicians who rated standardized guidelines as more useful also reported being more likely to host. Among never-hosts that link was strong. Among experienced hosts it nearly vanished. Both groups rated the guidelines about equally useful (4.13 and 4.33 out of 5), yet never-hosts were a full point less likely to host (3.50 against 4.56).</p>
-      <figure class="chart">
-        <h3>Link between guideline usefulness and willingness to host</h3>
-        <p class="sub">Spearman correlation, by group</p>
-        {rho_bars()}
-        <p class="foot">A correlation in survey data cannot show that guidelines cause physicians to host. The never-host group holds only 16 physicians.</p>
-      </figure>
-    </div>
-
-    <div class="finding">
-      <h3>5. Physicians want prepared students more than a fixed schedule</h3>
-      <p>Lining up each barrier with the resource meant to solve it shows where physicians put their weight. Preparation and clear rules were requested far more often than a structured schedule or privacy training.</p>
-      {pairs()}
-    </div>
-  </div>
-</section>
-
-<section id="limits">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Reading these results carefully</span>
-      <h2>What this survey cannot tell us</h2>
-      <p>These results are exploratory. They are strong enough to guide a program and too small to settle a question.</p>
-    </div>
-    <ul class="limits">
-      <li><h3>Small sample</h3><p>43 physicians is enough to describe patterns and too few to generalize to all physicians.</p></li>
+    <ul class="limits" style="margin-top:20px">
+      <li><h3>Small sample</h3><p>43 physicians can describe patterns. They cannot stand in for all physicians.</p></li>
       <li><h3>Weighted toward internal medicine</h3><p>24 of 43 respondents practiced internal medicine, and several specialties had three or fewer.</p></li>
       <li><h3>Who chose to answer</h3><p>Physicians willing to fill out a survey about shadowing may already care more about teaching students.</p></li>
       <li><h3>Stated intentions</h3><p>Saying you would host a student is different from hosting one.</p></li>
       <li><h3>One point in time</h3><p>A cross-sectional survey measures beliefs on one day and cannot establish cause.</p></li>
       <li><h3>Checkbox limits</h3><p>Some questions asked for up to three choices, and the form did not enforce the limit, so those counts are descriptive.</p></li>
     </ul>
+  </div>
+</section>
+
+<section class="after glance">
+  <div class="wrap">
+    <span class="eyebrow">The survey in one glance</span>
+    <h2>Physicians are willing. Students can meet them halfway.</h2>
+    <ul class="glance-grid">
+      <li><span class="n">{pct(time_n)}%</span><span class="t">named lack of time as a barrier</span></li>
+      <li><span class="n">{pct(likely_hi)}%</span><span class="t">would likely host with the right resources</span></li>
+      <li><span class="n">{pct(RESOURCES[0][1])}%</span><span class="t">asked for a student orientation handbook</span></li>
+      <li><span class="n">{pct(FACTORS[1][1])}%</span><span class="t">said asking questions makes shadowing meaningful</span></li>
+    </ul>
     <div class="btn-row">
-      <a href="results.html" class="btn">See every question and answer</a>
-      <a href="guide.html" class="btn ghost">Get the free guide</a>
+      <a href="guide.html" class="btn light">Get the free guide</a>
+      <a href="results.html" class="btn ghost on-dark">See every question and answer</a>
     </div>
   </div>
 </section>
-{refs([R_WAHEED, R_KITSIS, R_BAV, R_KEN], heading="The abstract and its background reading")}
+{refs([R_WAHEED, R_KITSIS, R_BAV, R_KEN], heading="The abstract and its background reading", band=False)}
 </main>
 """ + FOOT
 
