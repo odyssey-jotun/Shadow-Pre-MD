@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>The High School Student's Guide to Shadowing a Doctor</title>
+<meta name="author" content="Zoha Waheed"><style>
+@font-face{ font-family:'Newsreader'; font-weight:600 700; src:url(../fonts/newsreader-normal.woff2) format('woff2'); }
+@font-face{ font-family:'DM Sans'; font-weight:400 700; src:url(../fonts/dm-sans-normal.woff2) format('woff2'); }
+@page{ size: 8.5in 11in; margin: 0; }
+:root{
+  --paper:#F6F3EC; --card:#FFFFFF; --ink:#14232B; --soft:#465A65; --primary:#0F4C5C; --dark:#0A2B35;
+  --rust:#C2571F; --teal:#008A9E; --gold:#D9A441; --peach:#F2A77E; --track:#DDE5E8; --line:rgba(20,35,43,.16);
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{ font-family:'DM Sans',sans-serif; font-size:10.92pt; line-height:1.5; color:var(--ink); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+h1,h2,h3{ font-family:'Newsreader',Georgia,serif; font-weight:600; margin:0; letter-spacing:-0.012em; line-height:1.1; }
+p{ margin:0; }
+ul,ol{ margin:0; padding:0; list-style:none; }
+
+.page{ width:8.5in; height:11in; position:relative; overflow:hidden; background:var(--paper);
+  padding:.62in .7in .78in; display:flex; flex-direction:column; page-break-after:always; break-after:page; }
+.page:last-child{ page-break-after:auto; break-after:auto; }
+.body{ flex:1; display:flex; flex-direction:column; justify-content:space-between; min-height:0; }
+.foot{ position:absolute; left:.7in; right:.7in; bottom:.4in; display:flex; justify-content:space-between;
+  font-size:7.98pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
+.foot b{ color:var(--ink); }
+
+/* section head: number, title and kicker are one unit */
+.head{ display:grid; grid-template-columns:auto 1fr; column-gap:.2in; align-items:baseline;
+  padding-bottom:.13in; border-bottom:1px solid var(--line); margin-bottom:.2in; }
+.head .num{ font-weight:700; font-size:10.50pt; letter-spacing:.06em; color:var(--rust); }
+.head h2{ font-size:28.35pt; color:var(--primary); }
+.head .kicker{ grid-column:2; margin-top:.05in; font-size:8.19pt; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); }
+.lead{ font-size:11.55pt; line-height:1.5; }
+
+.tag{ display:inline-block; font-size:7.77pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:.055in .16in; border-radius:99px; background:var(--gold); color:var(--dark); margin-bottom:.075in; }
+.tag.teal{ background:#BFE3E8; } .tag.rust{ background:#F3C9B3; } .tag.dark{ background:var(--primary); color:#fff; }
+
+.stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:.16in; }
+.stat{ background:var(--card); border:1px solid var(--line); border-bottom:5px solid var(--rust); border-radius:10px; padding:.15in .17in .14in; }
+.stat:nth-child(2){ border-bottom-color:var(--teal); } .stat:nth-child(3){ border-bottom-color:var(--gold); }
+.stat .n{ display:block; font-family:'Newsreader',serif; font-weight:700; font-size:25.20pt; line-height:1; color:var(--primary); margin-bottom:.06in; }
+.stat .t{ display:block; font-size:9.24pt; font-weight:600; line-height:1.35; color:var(--soft); }
+
+.panel{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:.19in .22in; }
+.panel h3{ font-size:13.65pt; margin-bottom:.03in; }
+.panel .sub{ font-size:8.82pt; color:var(--soft); margin-bottom:.12in; }
+.bars li{ margin-top:.085in; } .bars li:first-child{ margin-top:0; }
+.bars .lab{ display:flex; justify-content:space-between; align-items:baseline; font-size:9.35pt; font-weight:600; margin-bottom:.03in; }
+.bars .v{ font-weight:400; color:var(--soft); font-size:8.40pt; white-space:nowrap; }
+.bars .v b{ font-family:'Newsreader',serif; font-size:11.13pt; color:var(--ink); margin-left:.07in; }
+.bars .track{ height:.085in; border-radius:3px; background:var(--track); overflow:hidden; }
+.bars .fill{ display:block; height:100%; background:var(--teal); border-radius:0 3px 3px 0; }
+.bars li.hl .fill{ background:var(--rust); } .bars li.mu .fill{ background:#8FA3AD; }
+
+.cols{ display:grid; grid-template-columns:1fr 1fr; gap:.26in; }
+.cols.wide-l{ grid-template-columns:1.25fr 1fr; } .cols.wide-r{ grid-template-columns:1fr 1.3fr; }
+.dots li{ position:relative; padding-left:.2in; margin-top:.07in; }
+.dots li:first-child{ margin-top:0; }
+.dots li:before{ content:""; position:absolute; left:0; top:.075in; width:.075in; height:.075in; border-radius:50%; background:var(--gold); }
+.dots.teal li:before{ background:var(--teal); } .dots.rust li:before{ background:var(--rust); }
+.dots b{ font-weight:inherit; }
+
+.checks{ display:grid; grid-template-columns:1fr 1fr; gap:.1in .3in; }
+.checks li{ position:relative; padding-left:.27in; font-weight:600; font-size:10.29pt; }
+.checks li:before{ content:""; position:absolute; left:0; top:.025in; width:.14in; height:.14in; border:1.6px solid var(--primary); border-radius:3px; }
+
+.moves{ display:grid; grid-template-columns:repeat(3,1fr); gap:.16in; }
+.move{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:.15in .16in; }
+.move .k{ display:block; font-size:7.56pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--rust); margin-bottom:.03in; }
+.move h3{ font-size:12.18pt; margin-bottom:.04in; }
+.move p{ font-size:9.35pt; color:var(--soft); line-height:1.42; }
+.moves.six{ grid-template-columns:repeat(3,1fr); }
+.moves.two{ grid-template-columns:1fr 1fr; }
+
+.quote{ position:relative; background:var(--dark); color:#fff; border-radius:12px; padding:.2in .3in .2in .62in; }
+.quote:before{ content:"\201C"; position:absolute; left:.22in; top:.06in; font-family:'Newsreader',serif; font-size:42.00pt; line-height:1; color:var(--peach); }
+.quote p{ font-family:'Newsreader',serif; font-style:italic; font-size:13.02pt; line-height:1.36; }
+.quote cite{ display:block; margin-top:.06in; font-style:normal; font-size:7.77pt; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--peach); }
+
+.letter{ background:var(--card); border:1px solid var(--line); border-left:5px solid var(--teal); border-radius:10px; padding:.18in .24in; font-size:9.97pt; line-height:1.5; }
+.letter p + p{ margin-top:.07in; }
+.letter .subj{ font-weight:700; color:var(--primary); }
+.blank{ display:inline-block; min-width:.9in; border-bottom:1.2px solid #8FA3AD; height:.13in; vertical-align:baseline; }
+
+.photo{ border-radius:12px; overflow:hidden; background:var(--track); }
+.photo img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+table.log{ width:100%; border-collapse:collapse; font-size:8.61pt; background:var(--card); border-radius:10px; overflow:hidden; }
+table.log th{ text-align:left; font-size:7.35pt; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--primary); padding:.07in .1in; }
+table.log td{ border-bottom:1px solid var(--line); border-right:1px solid var(--line); height:.3in; }
+table.log td:last-child{ border-right:0; }
+
+.write{ display:grid; gap:.13in; }
+.write .q{ font-weight:700; font-size:10.08pt; }
+.write .ln{ border-bottom:1.1px solid #9FB2BB; height:.25in; }
+
+.tip{ background:#FBF1EC; border:1px solid #EBCDBD; border-radius:10px; padding:.14in .2in; font-size:9.77pt; }
+.tip b{ color:var(--rust); letter-spacing:.06em; text-transform:uppercase; font-size:7.98pt; display:block; margin-bottom:.02in; }
+
+/* cover */
+.cover{ padding:0; background:var(--dark); color:#fff; }
+.cover .top{ padding:.75in .8in 0; flex:1; display:flex; flex-direction:column; }
+.cover .badge{ align-self:flex-start; font-size:7.98pt; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:var(--peach); color:var(--dark); padding:.06in .17in; border-radius:99px; }
+.cover h1{ font-size:47.25pt; line-height:1.02; margin-top:.36in; color:#fff; max-width:6.4in; }
+.cover h1 span{ color:var(--peach); }
+.cover .deck{ font-size:13.65pt; color:#BFD0D7; margin-top:.22in; max-width:5.6in; line-height:1.4; }
+.cover .by{ margin-top:auto; padding-bottom:.3in; font-size:9.03pt; letter-spacing:.1em; text-transform:uppercase; font-weight:700; }
+.cover .by span{ display:block; font-weight:400; letter-spacing:0; text-transform:none; color:#BFD0D7; font-size:9.87pt; margin-top:.03in; }
+.cover .img{ height:5.2in; }
+.cover .img img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+/* intro */
+.me{ display:grid; grid-template-columns:2.35in 1fr; gap:.3in; align-items:start; }
+.me .photo{ height:2.95in; }
+.me p + p{ margin-top:.09in; }
+.steps3{ display:grid; grid-template-columns:repeat(3,1fr); gap:.16in; }
+.steps3 li{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:.15in .16in; }
+.steps3 .c{ display:flex; align-items:center; justify-content:center; width:.34in; height:.34in; border-radius:50%; background:var(--primary); color:#fff; font-family:'Newsreader',serif; font-weight:700; font-size:12.60pt; margin-bottom:.08in; }
+.steps3 h3{ font-size:12.18pt; margin-bottom:.03in; } .steps3 p{ font-size:9.35pt; color:var(--soft); line-height:1.42; }
+.toc{ display:grid; grid-template-columns:1fr 1fr; gap:.05in .4in; font-size:9.87pt; }
+.toc li{ display:flex; justify-content:space-between; border-bottom:1px dotted #9FB2BB; padding-bottom:.02in; }
+.toc b{ color:var(--rust); margin-right:.1in; font-size:8.40pt; letter-spacing:.06em; }
+
+/* back */
+.back{ background:var(--dark); color:#fff; }
+.back .head{ border-bottom-color:rgba(255,255,255,.2); } .back .head h2{ color:#fff; } .back .head .kicker{ color:#BFD0D7; } .back .head .num{ color:var(--peach); }
+.back .lead{ color:#DCE7EB; }
+.back .checks li{ color:#fff; } .back .checks li:before{ border-color:var(--peach); }
+.glance{ display:grid; grid-template-columns:1fr 1fr; gap:.14in; }
+.glance li{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:10px; padding:.14in .18in; }
+.glance .n{ display:block; font-family:'Newsreader',serif; font-weight:700; font-size:23.10pt; line-height:1; color:var(--peach); margin-bottom:.04in; }
+.glance .t{ font-size:9.45pt; font-weight:600; color:#EEF4F6; }
+.src{ font-size:7.88pt; line-height:1.42; color:#BFD0D7; } .src li + li{ margin-top:.035in; }
+.back .foot{ color:#BFD0D7; } .back .foot b{ color:var(--peach); }
+.sign{ font-size:9.03pt; color:#BFD0D7; } .sign b{ color:#fff; letter-spacing:.1em; text-transform:uppercase; font-size:8.40pt; display:block; }
+</style></head><body>
+<section class="page cover">
+  <div class="top">
+    <span class="badge">Physician survey edition</span>
+    <h1>The High School Student's Guide to <span>Shadowing a Doctor</span></h1>
+    <p class="deck">How to find a physician, ask the right way, show up prepared, and learn something real from every day in the clinic.</p>
+    <p class="by">By Zoha Waheed<span>Built from a survey of 43 practicing physicians. 2026.</span></p>
+  </div>
+  <div class="img"><img src="img/cover.jpg" alt=""></div>
+</section><section class="page ">
+<div class="head"><span class="num">00</span><h2>Start Here</h2><p class="kicker">Why I wrote this guide and how to use it</p></div>
+<div class="body">
+  <div class="me">
+    <div class="photo"><img src="img/zoha.jpg" alt=""></div>
+    <div>
+      <p class="lead">I'm Zoha Waheed. I walked into my first endocrinology clinic knowing little more than what Google had told me the week before.</p>
+      <p>Since then I have shadowed seven physicians across four specialties. Even once I had those days, I found it difficult to get the most out of them.</p>
+      <p>So I surveyed 43 practicing physicians about what stops them from hosting high schoolers and what makes a shadowing day worth it. I also read five peer-reviewed studies on how students learn in the clinic.</p>
+      <p>This guide turns what they told me into steps you can follow.</p>
+    </div>
+  </div>
+  <div><span class="tag ">How to use this guide</span><ol class="steps3">
+    <li><span class="c">1</span><h3>Get the day</h3><p>Sections 1 to 3 show you why doctors say no, where to look, and how to ask.</p></li>
+    <li><span class="c">2</span><h3>Show up ready</h3><p>Sections 4 to 6 cover paperwork, what to wear, and the privacy rules.</p></li>
+    <li><span class="c">3</span><h3>Learn from it</h3><p>Sections 7 to 9 cover what to watch, what to ask, and what to write down.</p></li>
+  </ol></div>
+  <div><span class="tag teal">What physicians told me</span><div class="stats"><div class="stat"><span class="n">72%</span><span class="t">would likely host a student if the right resources were in place.</span></div><div class="stat"><span class="n">65%</span><span class="t">asked for students to arrive with an orientation handbook.</span></div><div class="stat"><span class="n">51%</span><span class="t">said the chance to ask questions makes shadowing meaningful.</span></div></div></div>
+  <div><span class="tag dark">Inside</span><ul class="toc">
+    <li><span><b>01</b>Why doctors say no</span><span>3</span></li><li><span><b>06</b>Privacy and professionalism</span><span>8</span></li>
+    <li><span><b>02</b>Find a doctor to shadow</span><span>4</span></li><li><span><b>07</b>What to watch for</span><span>9</span></li>
+    <li><span><b>03</b>How to ask</span><span>5</span></li><li><span><b>08</b>Questions to ask a doctor</span><span>10</span></li>
+    <li><span><b>04</b>Before your first day</span><span>6</span></li><li><span><b>09</b>After each day</span><span>11</span></li>
+    <li><span><b>05</b>What to wear and bring</span><span>7</span></li><li><span><b>10</b>Ready to shadow</span><span>12</span></li>
+  </ul></div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>2</b></div></section><section class="page ">
+<div class="head"><span class="num">01</span><h2>Why Doctors Say No</h2><p class="kicker">Know the barriers before you ask</p></div>
+<div class="body">
+  <p class="lead">A doctor who turns you down is rarely saying no to you. When I asked 43 physicians what gets in the way of hosting a high school student, their answers were about time, missing structure, and hospital rules. Once you know the obstacle, you can write a request that removes it.</p>
+  <div class="stats"><div class="stat"><span class="n">79%</span><span class="t">named lack of time, the most common barrier.</span></div><div class="stat"><span class="n">56%</span><span class="t">said no formal shadowing structure exists for them to follow.</span></div><div class="stat"><span class="n">51%</span><span class="t">named hospital policies, and the same share named patient privacy.</span></div></div>
+  <div class="panel"><h3>Every barrier physicians named</h3><p class="sub">Share of 43 physicians selecting each</p>
+    <ul class="bars">
+<li class="hl"><div class="lab"><span>Lack of physician time</span><span class="v">34 of 43<b>79%</b></span></div><div class="track"><span class="fill" style="width:79%"></span></div></li>
+<li><div class="lab"><span>No formal shadowing structure</span><span class="v">24 of 43<b>56%</b></span></div><div class="track"><span class="fill" style="width:56%"></span></div></li>
+<li><div class="lab"><span>Patient privacy and confidentiality</span><span class="v">22 of 43<b>51%</b></span></div><div class="track"><span class="fill" style="width:51%"></span></div></li>
+<li><div class="lab"><span>Hospital or institutional policies</span><span class="v">22 of 43<b>51%</b></span></div><div class="track"><span class="fill" style="width:51%"></span></div></li>
+<li><div class="lab"><span>Liability or administrative concerns</span><span class="v">19 of 43<b>44%</b></span></div><div class="track"><span class="fill" style="width:44%"></span></div></li>
+<li><div class="lab"><span>Difficulty coordinating schedules</span><span class="v">18 of 43<b>42%</b></span></div><div class="track"><span class="fill" style="width:42%"></span></div></li>
+<li><div class="lab"><span>Student preparedness and professionalism</span><span class="v">15 of 43<b>35%</b></span></div><div class="track"><span class="fill" style="width:35%"></span></div></li>
+<li><div class="lab"><span>Uncertainty about what students may do</span><span class="v">12 of 43<b>28%</b></span></div><div class="track"><span class="fill" style="width:28%"></span></div></li></ul></div>
+  <div><span class="tag rust">Turn each barrier into your next move</span><div class="moves "><div class="move"><span class="k">If the barrier is time</span><h3>Ask for less</h3><p>Request one half day. Offer three dates and let the office choose.</p></div><div class="move"><span class="k">If the barrier is structure</span><h3>Bring the plan</h3><p>Say what you hope to observe and that you will follow their lead.</p></div><div class="move"><span class="k">If the barrier is policy</span><h3>Ask the office first</h3><p>Call the front desk and ask who approves student observers.</p></div></div></div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>3</b></div></section><section class="page ">
+<div class="head"><span class="num">02</span><h2>Find a Doctor to Shadow</h2><p class="kicker">Start with people who already know you</p></div>
+<div class="body">
+  <p class="lead">Most shadowing days start with a personal connection. A physician is far more likely to answer a student they have some tie to than a stranger. Work outward from the people closest to you, and keep track of everyone you contact.</p>
+  <div class="moves six"><div class="move"><span class="k">Closest</span><h3>Your own doctors</h3><p>Your pediatrician, family doctor, or dentist already knows you. Ask at your next visit.</p></div><div class="move"><span class="k">Close</span><h3>Family and friends</h3><p>Ask parents, relatives, neighbors, and friends' parents who they know in medicine.</p></div><div class="move"><span class="k">At school</span><h3>Counselors and teachers</h3><p>School counselors and science teachers often know alumni and local physicians.</p></div><div class="move"><span class="k">In town</span><h3>Private practices</h3><p>Small clinics have fewer layers of approval than large hospitals. Call the office manager.</p></div><div class="move"><span class="k">Hospitals</span><h3>Volunteer offices</h3><p>Many hospitals route student observers through a volunteer or education office.</p></div><div class="move"><span class="k">Programs</span><h3>Health career clubs</h3><p>Groups such as HOSA and local health career programs can connect students with hosts.</p></div></div>
+  <div class="stats"><div class="stat"><span class="n">63%</span><span class="t">of the physicians I surveyed had already hosted a high school student.</span></div><div class="stat"><span class="n">27</span><span class="t">physicians had hosted before. Ask a doctor who has and you skip the first-time worries.</span></div><div class="stat"><span class="n">16</span><span class="t">had never hosted one. A short, prepared request matters most with them.</span></div></div>
+  <div><span class="tag teal">Outreach tracker</span><table class="log"><thead><tr><th style="width:24%">Physician or office</th><th style="width:17%">Specialty</th><th style="width:21%">How I know them</th><th style="width:13%">Date asked</th><th style="width:13%">Follow-up</th><th>Answer</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+  <blockquote class="quote" style="margin:0"><p>High school students shouldn't have to endlessly email physicians with no hope of finding any shadowing opportunities.</p><cite>Zoha Waheed</cite></blockquote>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>4</b></div></section><section class="page ">
+<div class="head"><span class="num">03</span><h2>How to Ask a Doctor to Shadow</h2><p class="kicker">A short, specific request is easier to say yes to</p></div>
+<div class="body">
+  <p class="lead">Physicians read email between patients. Keep your request under 150 words, say exactly what you are asking for, and answer their worries before they have to raise them.</p>
+  <div class="cols wide-r">
+    <div><span class="tag ">What a good request includes</span><ul class="dots "><li><b>Who you are:</b> name, school, and grade.</li><li><b>Your connection:</b> how you found them.</li><li><b>Why them:</b> one sentence on why their specialty interests you.</li><li><b>A small ask:</b> one half day, with flexible dates.</li><li><b>Proof you are ready:</b> you know the privacy rules and will complete any forms.</li><li><b>An easy out:</b> thank them either way.</li></ul></div>
+    <div class="letter">
+      <p class="subj">Subject: High school student asking to shadow for a half day</p>
+      <p>Dear Dr. <span class="blank"></span>,</p>
+      <p>My name is <span class="blank"></span> and I am a <span class="blank"></span> at <span class="blank"></span> High School. <span class="blank"></span> suggested I contact you. I am considering a career in medicine and would like to learn what a day in <span class="blank"></span> looks like.</p>
+      <p>Would you allow me to observe for one half day? I am free on <span class="blank"></span>, <span class="blank"></span>, or <span class="blank"></span>, and I can work around your schedule. I understand patient confidentiality and will complete any forms your office requires.</p>
+      <p>Thank you for considering it.</p>
+      <p>Sincerely, <span class="blank"></span><br>Phone: <span class="blank"></span></p>
+    </div>
+  </div>
+  <div class="moves "><div class="move"><span class="k">After one week</span><h3>Follow up once</h3><p>Reply to your own email with two sentences. Then call the office and ask for the manager.</p></div><div class="move"><span class="k">After two weeks</span><h3>Move on politely</h3><p>No answer usually means no time. Thank them and contact the next name on your list.</p></div><div class="move"><span class="k">When they say yes</span><h3>Confirm in writing</h3><p>Repeat the date, time, address, dress code, and who to ask for when you arrive.</p></div></div>
+  <div><span class="tag rust">Before you press send</span><ul class="checks"><li>The doctor's name is spelled correctly</li><li>The email is under 150 words</li><li>My phone number is included</li><li>A parent or teacher has read it</li></ul></div>
+  <div><span class="tag teal">If you call the office instead</span><div class="letter"><p>"Hello, my name is <span class="blank"></span>. I am a high school student interested in medicine. Could you tell me who handles requests to observe a physician, and the best way to reach them?"</p></div></div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>5</b></div></section><section class="page ">
+<div class="head"><span class="num">04</span><h2>Before Your First Day</h2><p class="kicker">Arrive ready and you remove a doctor's biggest doubt</p></div>
+<div class="body">
+  <p class="lead">Student preparedness worried 56% of the physicians who had never hosted a student, against 22% of those who had. The doctors asked for the fix themselves: students who arrive already oriented.</p>
+  <div class="panel"><h3>What physicians asked for</h3><p class="sub">Share of 43 physicians requesting each resource</p>
+    <ul class="bars">
+<li class="hl"><div class="lab"><span>Student orientation handbook</span><span class="v">28 of 43<b>65%</b></span></div><div class="track"><span class="fill" style="width:65%"></span></div></li>
+<li><div class="lab"><span>Clear rules on what students may observe</span><span class="v">26 of 43<b>60%</b></span></div><div class="track"><span class="fill" style="width:60%"></span></div></li>
+<li><div class="lab"><span>Suggested questions or discussion topics</span><span class="v">19 of 43<b>44%</b></span></div><div class="track"><span class="fill" style="width:44%"></span></div></li>
+<li><div class="lab"><span>Pre-shadowing educational materials</span><span class="v">17 of 43<b>40%</b></span></div><div class="track"><span class="fill" style="width:40%"></span></div></li>
+<li><div class="lab"><span>Professionalism expectations</span><span class="v">16 of 43<b>37%</b></span></div><div class="track"><span class="fill" style="width:37%"></span></div></li></ul></div>
+  <div class="cols">
+    <div><span class="tag teal">Ask the office about paperwork</span><ul class="dots teal"><li><b>Age minimum:</b> many hospitals set one, often 16.</li><li><b>Confidentiality form:</b> most require a signed agreement.</li><li><b>Parent permission:</b> expect a signature if you are under 18.</li><li><b>Health records:</b> some ask for immunizations or a TB test.</li><li><b>Badge and parking:</b> where to check in and where to park.</li></ul></div>
+    <div><span class="tag ">Learn the basics first</span><ul class="dots "><li><b>The specialty:</b> what it treats and who its patients are.</li><li><b>Five common conditions:</b> read a plain-language summary of each.</li><li><b>Ten key terms:</b> write them in the front of your notebook.</li><li><b>The physician:</b> read their practice's website.</li><li><b>The route:</b> plan to arrive 15 minutes early.</li></ul></div>
+  </div>
+  <div><span class="tag rust">The night before</span><ul class="checks"><li>Forms signed and printed</li><li>Clothes laid out</li><li>Notebook and two pens packed</li><li>Questions written down</li><li>Address and contact name saved</li><li>Alarm set, breakfast planned</li></ul></div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>6</b></div></section><section class="page ">
+<div class="head"><span class="num">05</span><h2>What to Wear to Shadow a Doctor</h2><p class="kicker">Dress like you work there</p></div>
+<div class="body">
+  <p class="lead">Patients will assume you are part of the team, so dress the part. Unless the office tells you otherwise, wear business casual. Save the scrubs for when someone hands them to you.</p>
+  <div class="cols">
+    <div style="display:flex;flex-direction:column;justify-content:space-between;gap:.2in">
+    <div><span class="tag ">Wear</span><ul class="dots "><li>Business casual: slacks or a knee-length skirt with a collared shirt or blouse.</li><li>Closed-toe shoes you can stand in for hours.</li><li>Hair tied back if it is long.</li><li>Scrubs only if the office asks for them.</li></ul></div>
+    <div><span class="tag rust">Leave at home</span><ul class="dots rust"><li>Perfume or cologne. Patients may be sensitive to scent.</li><li>Dangling jewelry and long necklaces.</li><li>Jeans, shorts, and open-toe shoes.</li><li>Anything with large logos or slogans.</li></ul></div>
+    </div>
+    <div class="photo" style="height:3.2in"><img src="img/students.jpg" alt=""></div>
+  </div>
+  <div class="moves "><div class="move"><span class="k">Scrubs</span><h3>Change when you get there</h3><p>Some surgical settings hand observers scrubs on arrival. Arrive in business casual and change on site.</p></div><div class="move"><span class="k">White coats</span><h3>Leave them to the staff</h3><p>A white coat tells patients you are a clinician. Observers should not wear one.</p></div><div class="move"><span class="k">Badges</span><h3>Keep yours visible</h3><p>If the office gives you a visitor or observer badge, wear it where people can read it.</p></div></div>
+  <div><span class="tag teal">Bring</span><ul class="checks"><li>Small notebook that fits a pocket</li><li>Two pens</li><li>Photo ID</li><li>Signed forms</li><li>Water bottle and a snack</li><li>Phone on silent, kept in your bag</li></ul></div>
+  <div class="tip"><b>If you feel faint</b>Feeling lightheaded during a first procedure is common and nothing to be embarrassed about. Eat breakfast, keep your knees unlocked, and if the room starts to tilt, sit down and tell someone right away.</div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>7</b></div></section><section class="page ">
+<div class="head"><span class="num">06</span><h2>Patient Privacy and Professionalism</h2><p class="kicker">The rules that keep you welcome</p></div>
+<div class="body">
+  <p class="lead">Every patient you see is trusting the room with private information. In the United States that trust is protected by a federal law called HIPAA. Half of the physicians I surveyed named privacy as a barrier to hosting students, so show them you take it seriously.</p>
+  <div class="stats"><div class="stat"><span class="n">51%</span><span class="t">of physicians named patient privacy as a barrier to hosting.</span></div><div class="stat"><span class="n">33%</span><span class="t">asked for HIPAA and confidentiality training for students.</span></div><div class="stat"><span class="n">37%</span><span class="t">asked for clear professionalism expectations.</span></div></div>
+  <div class="cols">
+    <div><span class="tag teal">Always</span><ul class="dots teal"><li><b>Introduce yourself</b> and let the patient decide if you stay.</li><li><b>Step out</b> the moment anyone asks you to.</li><li><b>Stand where you are told</b> and keep out of the way.</li><li><b>Keep your notes free of names,</b> birth dates, and room numbers.</li><li><b>Wash or sanitize your hands</b> going in and coming out.</li></ul></div>
+    <div><span class="tag rust">Never</span><ul class="dots rust"><li><b>Take photos or video,</b> even of an empty room.</li><li><b>Post about a patient,</b> even without a name.</li><li><b>Discuss a case</b> in hallways, elevators, or at home.</li><li><b>Touch a patient or equipment</b> unless the physician asks.</li><li><b>Offer medical opinions</b> to a patient or family.</li></ul></div>
+  </div>
+  <div><span class="tag ">Three terms to know</span><div class="moves "><div class="move"><span class="k">The law</span><h3>HIPAA</h3><p>The federal law that protects the privacy of a patient's health information.</p></div><div class="move"><span class="k">The information</span><h3>PHI</h3><p>Protected health information: anything that could identify a patient, from a name to a photo.</p></div><div class="move"><span class="k">The habit</span><h3>Need to know</h3><p>Only the people caring for a patient should hear the details. That rule applies to you too.</p></div></div></div>
+  <div><span class="tag ">What to say when you meet a patient</span><div class="letter"><p>"Hello, my name is <span class="blank"></span>. I am a high school student observing Dr. <span class="blank"></span> today. Is it all right with you if I stay in the room?"</p><p>If the patient says no, smile, thank them, and wait outside. It is their right, and physicians notice students who handle it well.</p></div></div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>8</b></div></section><section class="page ">
+<div class="head"><span class="num">07</span><h2>What to Do When Shadowing a Doctor</h2><p class="kicker">Watch how a physician thinks</p></div>
+<div class="body">
+  <p class="lead">Students often hope for a dramatic procedure. Physicians told me the value lies elsewhere: in watching patient care up close and understanding the reasoning behind it. Procedures ranked near the bottom.</p>
+  <div class="photo" style="height:2.8in"><img src="img/notes.jpg" alt=""></div>
+  <div class="cols wide-l">
+    <div class="panel"><h3>What makes shadowing meaningful</h3><p class="sub">Share of 43 physicians selecting each factor</p>
+      <ul class="bars">
+<li><div class="lab"><span>Direct observation of patient care</span><span class="v">30 of 43<b>70%</b></span></div><div class="track"><span class="fill" style="width:70%"></span></div></li>
+<li class="hl"><div class="lab"><span>Ability to ask questions</span><span class="v">22 of 43<b>51%</b></span></div><div class="track"><span class="fill" style="width:51%"></span></div></li>
+<li><div class="lab"><span>Interaction with physicians</span><span class="v">19 of 43<b>44%</b></span></div><div class="track"><span class="fill" style="width:44%"></span></div></li>
+<li><div class="lab"><span>Career guidance</span><span class="v">17 of 43<b>40%</b></span></div><div class="track"><span class="fill" style="width:40%"></span></div></li>
+<li><div class="lab"><span>Understanding clinical reasoning</span><span class="v">15 of 43<b>35%</b></span></div><div class="track"><span class="fill" style="width:35%"></span></div></li>
+<li class="mu"><div class="lab"><span>Exposure to medical procedures</span><span class="v">8 of 43<b>19%</b></span></div><div class="track"><span class="fill" style="width:19%"></span></div></li></ul></div>
+    <div><span class="tag ">Watch for these six things</span><ul class="dots "><li><b>The opening:</b> how the physician greets the patient and starts the visit.</li><li><b>The history:</b> which questions get asked, and in what order.</li><li><b>The exam:</b> what the physician checks and what gets skipped.</li><li><b>The reasoning:</b> what changed their mind along the way.</li><li><b>The explanation:</b> how a diagnosis is put in plain words.</li><li><b>The team:</b> who else helps, and what each person does.</li></ul></div>
+  </div>
+  <div class="tip"><b>Shadow more than one specialty</b>A day in endocrinology looks nothing like a day in rheumatology. Seeing several specialties shows you different kinds of patients, problems, and pace, and it helps you picture where you fit.</div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>9</b></div></section><section class="page ">
+<div class="head"><span class="num">08</span><h2>Questions to Ask a Doctor You Shadow</h2><p class="kicker">Ask between patients</p></div>
+<div class="body">
+  <p class="lead">More than half of the physicians I surveyed said the ability to ask questions is what makes shadowing meaningful. Write yours down before you arrive. Hold them until the patient has left, then ask while the visit is fresh.</p>
+  <div class="cols wide-l">
+    <div>
+      <div><span class="tag ">About the patient you just saw</span><ul class="dots "><li>What information mattered most in making that decision?</li><li>What possibilities were you considering?</li><li>How did you decide which tests were necessary?</li><li>What made this case difficult?</li></ul></div>
+    </div>
+    <div class="photo" style="height:2.35in"><img src="img/pair.jpg" alt=""></div>
+  </div>
+  <div class="cols">
+    <div><span class="tag teal">About the work</span><ul class="dots teal"><li>What does a typical week look like for you?</li><li>Which parts of your job differ most from what students expect?</li><li>What do you wish you had more time for?</li><li>What is the hardest part of this specialty?</li></ul></div>
+    <div><span class="tag rust">About the path</span><ul class="dots rust"><li>When did you know you wanted this specialty?</li><li>What would you do differently in high school or college?</li><li>What should I be doing now to prepare?</li><li>Who else would you suggest I talk to or shadow?</li></ul></div>
+  </div>
+  <div class="moves "><div class="move"><span class="k">Timing</span><h3>Between patients</h3><p>Save questions for the hallway or the end of the day, never in front of a patient.</p></div><div class="move"><span class="k">Depth</span><h3>Ask why</h3><p>Questions about reasoning teach you more than questions about facts you can look up.</p></div><div class="move"><span class="k">Limits</span><h3>Read the room</h3><p>On a packed day, pick your best two questions and write the others down for later.</p></div></div>
+  <div class="tip"><b>Questions to skip</b>Leave out anything about salary, anything that names or identifies a patient, and anything a quick search could answer. Use your time with a physician for what only a physician can tell you.</div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>10</b></div></section><section class="page ">
+<div class="head"><span class="num">09</span><h2>After Each Day of Shadowing</h2><p class="kicker">Write it down while it is fresh</p></div>
+<div class="body">
+  <p class="lead">The studies I read agreed on one habit: reflection. Students who put their clinical experiences into writing analyze what they saw more carefully and notice what they still need to learn. Give yourself fifteen minutes the same evening.</p>
+  <div><span class="tag teal">Shadowing journal</span><div class="panel write">
+      <div><p class="q">Date, physician, and specialty</p><div class="ln"></div></div>
+      <div><p class="q">What did I observe today? (no patient names)</p><div class="ln"></div><div class="ln"></div></div>
+      <div><p class="q">What surprised me?</p><div class="ln"></div><div class="ln"></div></div>
+      <div><p class="q">What did I learn about how this physician makes decisions?</p><div class="ln"></div><div class="ln"></div></div>
+      <div><p class="q">What questions do I still have?</p><div class="ln"></div><div class="ln"></div></div>
+      <div><p class="q">Could I see myself doing this work? Why or why not?</p><div class="ln"></div><div class="ln"></div></div>
+    </div></div>
+  <div><span class="tag ">Send a thank-you note within two days</span><div class="letter">
+      <p>Dear Dr. <span class="blank"></span>,</p>
+      <p>Thank you for letting me shadow you on <span class="blank"></span>. Watching you <span class="blank"></span> taught me <span class="blank"></span>. I especially appreciated the time you took to explain <span class="blank"></span>.</p>
+      <p>The day made me more certain that <span class="blank"></span>. Thank you again for your generosity.</p>
+      <p>Sincerely, <span class="blank"></span></p></div></div>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>11</b></div></section><section class="page back">
+<div class="head"><span class="num">10</span><h2>Ready to Shadow?</h2><p class="kicker">Your checklist, your log, and the research behind this guide</p></div>
+<div class="body">
+  <p class="lead">Physicians want to teach. Arrive prepared, ask good questions, and write down what you saw, and you will leave with a clearer answer about medicine than you came in with.</p>
+  <div><span class="tag ">Final checklist</span><ul class="checks"><li>I know who approves observers at this office</li><li>My forms are signed</li><li>I know the dress code</li><li>I can explain the privacy rules</li><li>My questions are written down</li><li>My journal page is ready</li></ul></div>
+  <div><span class="tag teal">Shadowing log</span><table class="log"><thead><tr><th style="width:15%">Date</th><th style="width:27%">Physician</th><th style="width:22%">Specialty</th><th style="width:12%">Hours</th><th>One thing I learned</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+  <div><span class="tag rust">The survey in one glance</span><ul class="glance">
+      <li><span class="n">79%</span><span class="t">named lack of time as a barrier</span></li>
+      <li><span class="n">72%</span><span class="t">would likely host with the right resources</span></li>
+      <li><span class="n">65%</span><span class="t">asked for a student orientation handbook</span></li>
+      <li><span class="n">51%</span><span class="t">said asking questions makes shadowing meaningful</span></li></ul></div>
+  <div>
+    <span class="tag dark">Sources</span>
+    <ol class="src">
+      <li>Waheed, Z. S. (2026). Physician perspectives on high school shadowing: Barriers, educational value, and opportunities for standardization. Survey of 43 practicing physicians. Abstract submitted to the 2027 Medical Education Innovation Conference.</li>
+      <li>Mann, K., Gordon, J., &amp; MacLeod, A. (2009). Reflection and reflective practice in health professions education: A systematic review. Advances in Health Sciences Education, 14(4), 595-621.</li>
+      <li>Mafinejad, M. K., et al. (2022). Reflection on near-peer shadowing program. BMC Medical Education, 22.</li>
+      <li>Estes, M., et al. (2026). From fly on the wall to future colleagues: Best practice recommendations for medical student shadowing programs. AEM Education and Training, 10(3).</li>
+    </ol>
+  </div>
+  <p class="sign"><b>Developed by Zoha Waheed</b>Shadow Pre-MD. Free for any student to use and share. Hospital rules vary, so always follow the instructions of the office hosting you.</p>
+</div><div class="foot"><span>The High School Student's Guide to Shadowing a Doctor</span><b>12</b></div></section>
+</body></html>

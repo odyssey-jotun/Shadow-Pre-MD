@@ -178,8 +178,8 @@ def crumbs(name, path):
 
 
 def nav(current):
-    items = [("index.html", "Home"), ("survey.html", "Physician Survey"), ("results.html", "Survey Results"),
-             ("index.html#about", "About")]
+    items = [("index.html", "Home"), ("guide.html", "Guide"), ("survey.html", "Physician Survey"),
+             ("results.html", "Survey Results")]
     lis = []
     for href, label in items:
         cur = ' aria-current="page"' if href == current else ""
@@ -190,7 +190,7 @@ def nav(current):
     <ul>
 {chr(10).join(lis)}
     </ul>
-    <a href="guide.html" class="nav-cta">Get the Free Guide</a>
+    <a href="downloads/shadowing-a-doctor-guide.pdf" download class="nav-cta">Get the Free Guide</a>
   </div>
 </nav>
 """
@@ -205,6 +205,7 @@ FOOT = """
       <li><a href="survey.html">Physician Survey</a></li>
       <li><a href="results.html">Survey Results</a></li>
       <li><a href="guide.html">Free Shadowing Guide</a></li>
+      <li><a href="index.html#about">About Zoha</a></li>
     </ul>
   </div>
 </footer>
@@ -418,7 +419,7 @@ def index():
       <h1>Shadowing a doctor in high school? Make every day count.</h1>
       <p class="lede">Shadow Pre-MD shows students how to prepare for a day with a physician, what to watch for, and which questions to ask. It is built on what 43 practicing physicians said about the students they host.</p>
       <div class="btn-row">
-        <a href="guide.html" class="btn">Get the free guide</a>
+        <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn">Get the free guide</a>
         <a href="survey.html" class="btn ghost">See the physician survey</a>
       </div>
     </div>
@@ -524,7 +525,7 @@ def index():
       </li>
       <li>
         <h3>Follow each step before your first day</h3>
-        <p>Work through the guide one step at a time.</p>
+        <p>Ten short sections take you from finding a doctor to writing your thank-you note.</p>
       </li>
       <li>
         <h3>Learn more from every patient you see</h3>
@@ -536,7 +537,7 @@ def index():
       <p>If you read through the guide and follow its steps, you will take away something useful from your shadowing.</p>
     </div>
     <div class="btn-row">
-      <a href="guide.html" class="btn">Get the free guide</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn">Get the free guide</a>
     </div>
   </div>
 </section>
@@ -601,7 +602,7 @@ def index():
       <h2>How shadowing helps a student decide on a career in medicine</h2>
       <p>I started this search disappointed and frustrated. A day used well can settle the question you came in with.</p>
       <div class="btn-row">
-        <a href="guide.html" class="btn light">Get the free guide</a>
+        <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn light">Get the free guide</a>
       </div>
     </div>
     <ul class="outcomes">
@@ -618,7 +619,7 @@ def index():
     <h2>Get the free medical shadowing guide for high school students</h2>
     <p>Read it before you walk into the clinic.</p>
     <div class="btn-row">
-      <a href="guide.html" class="btn">Get the free guide</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn">Get the free guide</a>
     </div>
   </div>
 </section>
@@ -689,7 +690,7 @@ def survey():
     <h1>I asked 43 physicians about letting high school students shadow them</h1>
     <p class="lede">Students can't fix a problem nobody has measured. So I surveyed practicing physicians about what stops them from hosting high schoolers, what makes a shadowing day worth it, and what would help. Here is what they told me.</p>
     <div class="btn-row">
-      <a href="guide.html" class="btn">Get the free guide</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn">Get the free guide</a>
       <a href="results.html" class="btn ghost">See every question and answer</a>
     </div>
     </div>
@@ -870,7 +871,7 @@ def survey():
       <li><span class="n">{pct(FACTORS[1][1])}%</span><span class="t">said asking questions makes shadowing meaningful</span></li>
     </ul>
     <div class="btn-row">
-      <a href="guide.html" class="btn light">Get the free guide</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn light">Get the free guide</a>
       <a href="results.html" class="btn ghost on-dark">See every question and answer</a>
     </div>
   </div>
@@ -935,7 +936,7 @@ def results():
     <p class="lede">Each chart below shows one survey question with the count and share for every answer. The second half breaks the answers down by whether the physician had hosted a student before.</p>
     <div class="btn-row">
       <a href="survey.html" class="btn ghost">Read the survey findings</a>
-      <a href="guide.html" class="btn">Get the free guide</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn">Get the free guide</a>
     </div>
     </div>
     {hero_photo("hero-reviewing-scan", "A young trainee in a white coat watching over a physician's shoulder as she points out a brain scan on a monitor")}
@@ -996,7 +997,7 @@ def results():
       <p class="foot">Physicians who found guidelines more useful were more willing to host, and the link was strongest among those who had never hosted.</p>
     </figure>
     <div class="btn-row">
-      <a href="guide.html" class="btn">Get the free guide</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn">Get the free guide</a>
       <a href="survey.html" class="btn ghost">Read the survey findings</a>
     </div>
   </div>
@@ -1006,8 +1007,122 @@ def results():
 """ + FOOT
 
 
+
+# ---------------------------------------------------------------- guide page
+GUIDE_PDF = "downloads/shadowing-a-doctor-guide.pdf"
+SECTIONS = [
+    ("Why doctors say no", "The barriers 43 physicians named, and how to write a request that removes them."),
+    ("Find a doctor to shadow", "Six places to look, starting with people who already know you, plus an outreach tracker."),
+    ("How to ask a doctor to shadow", "A fill-in email, a phone script, and when to follow up."),
+    ("Before your first day", "The paperwork to ask about and what to learn in advance."),
+    ("What to wear to shadow a doctor", "What to wear, what to bring, and what to leave at home."),
+    ("Patient privacy and professionalism", "HIPAA in plain words and how to introduce yourself to a patient."),
+    ("What to do when shadowing a doctor", "Six things to watch for in every patient visit."),
+    ("Questions to ask a doctor you shadow", "Twelve questions, when to ask them, and which to skip."),
+    ("After each day of shadowing", "A journal page and a thank-you note you can fill in."),
+    ("Ready to shadow", "A final checklist and a log for your hours."),
+]
+
+
+def guide():
+    t, d = ("Free Guide to Shadowing a Doctor in High School | Shadow Pre-MD",
+            "Download a free 12-page guide to shadowing a doctor: how to ask, what to wear, questions to ask, and a shadowing journal. Built from a survey of 43 physicians.")
+    cards = "\n".join(
+        f'      <div class="card"><p class="num">{i + 1:02d}</p><h3>{h}</h3><p>{p}</p></div>' for i, (h, p) in enumerate(SECTIONS))
+    schema = [page_schema("WebPage", "guide.html", t, d, {"image": SITE + "images/og.jpg"}),
+              {"@type": "DigitalDocument", "@id": SITE + "guide.html#guide", "name": "The High School Student's Guide to Shadowing a Doctor",
+               "author": {"@id": SITE + "#zoha"}, "encodingFormat": "application/pdf", "url": SITE + GUIDE_PDF,
+               "numberOfPages": 12, "isAccessibleForFree": True, "inLanguage": "en-US", "datePublished": "2026-09-29"},
+              crumbs("Free Shadowing Guide", "guide.html")]
+    return head(t, d, "guide.html", schema, hero="hero-taking-notes") + nav("guide.html") + f"""
+<main id="main">
+
+<header class="hero">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Free 12-page guide</span>
+      <h1>The high school student's guide to shadowing a doctor</h1>
+      <p class="lede">Everything a student needs to land a shadowing day and learn from it: where to look, how to ask, what to wear, which questions to bring, and what to write down afterward.</p>
+      <div class="btn-row">
+        <a href="{GUIDE_PDF}" download class="btn">Download the free guide</a>
+        <a href="survey.html" class="btn ghost">See the physician survey</a>
+      </div>
+    </div>
+    {hero_photo("hero-taking-notes", "A student in scrubs taking notes on a pad while a clinician scrubs in at the sink")}
+  </div>
+</header>
+
+<section class="band" id="inside">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What is inside</span>
+      <h2>Ten sections that take a student from the first email to the thank-you note</h2>
+      <p>Each section fits on one page. Several are worksheets made to be printed and filled in.</p>
+    </div>
+    <div class="cards">
+{cards}
+    </div>
+    <div class="btn-row"><a href="{GUIDE_PDF}" download class="btn">Download the free guide</a></div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Made to be used</span>
+      <h2>Templates and worksheets for shadowing a doctor</h2>
+      <p>I wanted this guide to do some of the work for you, so it comes with pages you can write on.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><h3>Email to a physician</h3><p>A request under 150 words with blanks for your name, school, and dates.</p></div>
+      <div class="card"><h3>Phone script</h3><p>What to say when you call an office to ask who approves student observers.</p></div>
+      <div class="card"><h3>Outreach tracker</h3><p>A table for every doctor you contact, when you asked, and what they said.</p></div>
+      <div class="card"><h3>Patient introduction</h3><p>One sentence that tells a patient who you are and lets them decide if you stay.</p></div>
+      <div class="card"><h3>Shadowing journal</h3><p>Six prompts to answer the same evening, while the day is still fresh.</p></div>
+      <div class="card"><h3>Thank-you note</h3><p>A short note to send within two days, with blanks for what you learned.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Where the advice comes from</span>
+      <h2>Shadowing advice built on what 43 physicians said</h2>
+      <p>I surveyed practicing physicians about hosting high school students. Their answers decided what went into the guide.{c(1)}</p>
+    </div>
+    <div class="charts">
+      <figure class="chart">
+        <h3>Resources physicians asked for most</h3>
+        <p class="sub">Share of 43 physicians requesting each</p>
+        {bars(RESOURCES[:5], hl=("Student orientation program or handbook",))}
+      </figure>
+      <figure class="chart">
+        <h3>What makes shadowing meaningful</h3>
+        <p class="sub">Share of 43 physicians selecting each factor</p>
+        {bars(FACTORS[:5], hl=("Ability to ask questions",))}
+      </figure>
+    </div>
+    <div class="btn-row"><a href="survey.html" class="btn ghost">Read the physician survey</a></div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <h2>Download the free medical shadowing guide</h2>
+    <p>Twelve pages, free, and yours to print and share.</p>
+    <div class="btn-row">
+      <a href="{GUIDE_PDF}" download class="btn">Download the free guide</a>
+    </div>
+  </div>
+</section>
+{refs([R_WAHEED], heading="Source")}
+</main>
+""" + FOOT
+
+
 if __name__ == "__main__":
-    for name, fn in (("index.html", index), ("survey.html", survey), ("results.html", results)):
+    for name, fn in (("index.html", index), ("guide.html", guide), ("survey.html", survey), ("results.html", results)):
         with open(name, "w") as f:
             f.write(fn())
         print("wrote", name)

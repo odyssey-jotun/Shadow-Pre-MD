@@ -15,20 +15,21 @@ The repository is public and GitHub Pages serves `main` at root. Pushing to `mai
 | `index.html` | StoryBrand landing page: header, problem (three icons with stats), guide (Zoha, first person), plan, proof, call to action |
 | `survey.html` | The survey in six numbered sections. Each has a lead paragraph in Zoha's voice, three stat cards, a donut beside a bar chart, and a pull-quote band. Modelled on the survey layout in Deven Patel's mountain biking guide (arbiketrails.com) |
 | `results.html` | Every question with the count and share for each answer, plus the split by hosting experience |
-| `guide.html` | Holding page for the guide download |
+| `guide.html` | Guide landing page: what is inside, the worksheets, and the download |
+| `downloads/shadowing-a-doctor-guide.pdf` | The 12-page guide |
 
 ## Editing
 
-`index.html`, `survey.html` and `results.html` are generated. Change the numbers or copy in `build.py`, then run:
+`index.html`, `guide.html`, `survey.html` and `results.html` are generated. Change the numbers or copy in `build.py`, then run:
 
     python3 build.py
 
-Styles live in `styles.css`. `guide.html` is hand-written.
+Styles live in `styles.css`.
 
 ## Status
 
-- The guide PDF does not exist yet. Every "Get the free guide" button points to `guide.html`. When the PDF is ready, put it in `downloads/` and point those links at it.
-- The three content pages are indexable (`index,follow`, canonical URLs, `sitemap.xml`, open `robots.txt`). Only `guide.html` stays `noindex` because it is a thin holding page; flip it when the PDF ships and add it to the sitemap.
+- The guide exists as of 2026-09-29. Every "Get the free guide" button downloads the PDF.
+- All four pages are indexable (`index,follow`, canonical URLs, `sitemap.xml`, open `robots.txt`).
 - The survey's raw responses were not available when the site was built. All figures come from the tabulated counts and from the abstract. Questions 2, 3 and 5 on the results page are incomplete for that reason.
 - Question wording on the results page follows Zoha's draft question list and should be checked against the final Google Form.
 - The abstract is submitted to the 2027 Medical Education Innovation Conference, not yet accepted.
@@ -55,3 +56,20 @@ Every page's hero is a photograph of people. This is a standing rule: no data pa
 | `images/hero-zoha-*.webp`, `images/zoha-*.webp` | Survey hero, About section | Zoha's own photo |
 
 The two stock photos are stand-ins showing young adults, the closest free match to a student shadowing a doctor. No free photo of a high school student in scrubs was found. Replace them with photos of Zoha shadowing if she has any.
+
+## The guide PDF
+
+Source is in `guide-src/`. To rebuild:
+
+    cd guide-src
+    python3 guide.py
+    NODE_PATH=/Users/marcgray/odyssey/node_modules node render.mjs
+
+`guide.py` holds all twelve pages. Each page is a fixed Letter sheet whose blocks share the spare height, so no page ends with a hole. `render.mjs` prints the PDF and reports each page's shared gap: under 10px is too full, over 30px is too empty.
+
+What in the guide comes from where:
+
+- Survey figures, charts, and the two quoted lines come from Zoha's survey and brand script.
+- The reflection advice on page 11 follows her literature review.
+- The practical advice (where to look, the email and phone scripts, dress code, privacy rules, observation prompts, questions, thank-you note) is standard shadowing practice written up for this guide. It is not drawn from her survey. Zoha should read it and change anything that does not match her experience.
+- Photos: Unsplash `Pd4lRfKo16U` (cover), `hRRx2byCaLo` (page 7), `TRE4BJelfLk` (page 9), `DbCfSrTnflA` (page 10), plus Zoha's own photo.
