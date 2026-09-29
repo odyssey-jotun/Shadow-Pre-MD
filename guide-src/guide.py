@@ -260,7 +260,7 @@ pages.append(page(3, f"""
   {stats([("79%", "named lack of time, the most common barrier."),
           ("56%", "said no formal shadowing structure exists for them to follow."),
           ("51%", "named hospital policies, and the same share named patient privacy.")])}
-  <div class="panel"><h3>Every barrier physicians named</h3><p class="sub">Share of 43 physicians selecting each</p>
+  <div class="panel"><h3>Why doctors say no to high school students shadowing them</h3><p class="sub">Share of 43 physicians selecting each</p>
     {bars(BARRIERS, hl=("Lack of physician time",))}</div>
   {block("Turn each barrier into your next move", moves([
       ("If the barrier is time", "Ask for less", "Request one half day. Offer three dates and let the office choose."),

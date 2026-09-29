@@ -737,7 +737,7 @@ def survey():
                f"{pct(time_n)}%", "short on time", "79 percent of physicians named lack of time as a barrier")}
       </figure>
       <figure class="chart">
-        <h3>Every barrier physicians named</h3>
+        <h3>Why doctors say no to high school students shadowing them</h3>
         <p class="sub">Share of 43 physicians selecting each</p>
         {bars([(l, t) for l, t, *_ in BARRIERS] + [BARRIERS_OTHER], hl=("Lack of physician time",), muted=("Other",))}
       </figure>
