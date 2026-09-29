@@ -80,13 +80,42 @@ def pct(n, d=N):
 
 
 # ---------------------------------------------------------------- pieces
-FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-         '<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700'
-         '&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">')
+SITE = "https://odyssey-jotun.github.io/Shadow-Pre-MD/"
+CSS = None
 
 
-def head(title, desc):
+def css():
+    """styles.css, minified and inlined so no stylesheet blocks first paint."""
+    import re
+    global CSS
+    if CSS is None:
+        t = open("styles.css").read()
+        t = re.sub(r"/\*.*?\*/", "", t, flags=re.S)
+        t = re.sub(r"\s+", " ", t)
+        t = re.sub(r"\s*([{};:,>])\s*", r"\1", t).replace(";}", "}")
+        CSS = t.strip()
+    return CSS
+
+
+PERSON = {
+    "@type": "Person",
+    "@id": SITE + "#zoha",
+    "name": "Zoha Waheed",
+    "description": "High school student and author of Shadow Pre-MD, a free guide to medical shadowing.",
+    "image": SITE + "images/zoha-800.webp",
+    "url": SITE + "#about",
+}
+
+
+def head(title, desc, path="", schema=None):
+    import json
+    url = SITE + path
+    graph = [{
+        "@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "Shadow Pre-MD",
+        "description": "A free guide to medical shadowing for high school students.",
+        "author": {"@id": SITE + "#zoha"}, "inLanguage": "en-US"}, PERSON]
+    graph += schema or []
+    ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, separators=(",", ":"))
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,14 +123,25 @@ def head(title, desc):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<!-- TEMPORARY: noindex until the guide PDF is published. Flip to "index,follow" at launch. -->
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="{url}">
+<meta name="author" content="Zoha Waheed">
 <meta name="theme-color" content="#F4F7F9">
+<meta property="og:site_name" content="Shadow Pre-MD">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">
-{FONTS}
-<link rel="stylesheet" href="styles.css">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{SITE}images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Shadow Pre-MD: a free medical shadowing guide for high school students">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/newsreader-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dm-sans-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>{css()}</style>
+<script type="application/ld+json">{ld}</script>
 </head>
 <body>
 
@@ -109,8 +149,22 @@ def head(title, desc):
 """
 
 
+def page_schema(kind, path, title, desc, extra=None):
+    d = {"@type": kind, "@id": SITE + path + "#page", "url": SITE + path, "name": title, "headline": title,
+         "description": desc, "isPartOf": {"@id": SITE + "#site"}, "author": {"@id": SITE + "#zoha"},
+         "inLanguage": "en-US", "datePublished": "2026-09-29", "dateModified": "2026-09-29"}
+    d.update(extra or {})
+    return d
+
+
+def crumbs(name, path):
+    return {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE},
+        {"@type": "ListItem", "position": 2, "name": name, "item": SITE + path}]}
+
+
 def nav(current):
-    items = [("index.html", "Home"), ("survey.html", "The Survey"), ("results.html", "The Results"),
+    items = [("index.html", "Home"), ("survey.html", "Physician Survey"), ("results.html", "Survey Results"),
              ("index.html#about", "About")]
     lis = []
     for href, label in items:
@@ -122,7 +176,7 @@ def nav(current):
     <ul>
 {chr(10).join(lis)}
     </ul>
-    <a href="guide.html" class="nav-cta">Get the Guide</a>
+    <a href="guide.html" class="nav-cta">Get the Free Guide</a>
   </div>
 </nav>
 """
@@ -134,9 +188,9 @@ FOOT = """
     <span>Shadow Pre-MD, a project by Zoha Waheed</span>
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li><a href="survey.html">The Survey</a></li>
-      <li><a href="results.html">The Results</a></li>
-      <li><a href="guide.html">The Guide</a></li>
+      <li><a href="survey.html">Physician Survey</a></li>
+      <li><a href="results.html">Survey Results</a></li>
+      <li><a href="guide.html">Free Shadowing Guide</a></li>
     </ul>
   </div>
 </footer>
@@ -213,9 +267,9 @@ def columns(dist, lo_label, hi_label):
 
 
 def waffle():
-    cells = ['<li class="never"></li>'] * NEVER + ["<li></li>"] * HOSTS
-    return ('<ul class="waffle" role="img" aria-label="43 physicians: 27 had hosted a high school student, 16 never had">'
-            + "".join(cells) + "</ul>")
+    cells = ['<span class="never"></span>'] * NEVER + ["<span></span>"] * HOSTS
+    return ('<div class="waffle" role="img" aria-label="43 physicians: 27 had hosted a high school student, 16 never had">'
+            + "".join(cells) + "</div>")
 
 
 def rho_bars():
@@ -338,19 +392,20 @@ def index():
     time_n, struct_n, pol_n = b["Lack of physician time"], b["Lack of formal shadowing structure"], b["Hospital or institutional policies"]
     likely_hi = LIKELY[3] + LIKELY[4]
     handbook = RESOURCES[0][1]
-    return head("Shadow Pre-MD | A Free Shadowing Guide for High School Students",
-                "A free guide to medical shadowing for high school students, built from a survey of 43 practicing physicians and five peer-reviewed studies.") + nav("index.html") + f"""
+    t, d = ("How to Shadow a Doctor in High School | Shadow Pre-MD",
+            "A free guide to shadowing a doctor in high school: how to prepare, what to watch, and which questions to ask. Built from a survey of 43 physicians.")
+    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"})]) + nav("index.html") + f"""
 <main id="main">
 
 <header class="hero">
   <div class="wrap split">
     <div>
-      <span class="eyebrow">A free guide for high school students considering medicine</span>
-      <h1>Make every shadowing day count.</h1>
+      <span class="eyebrow">A free shadowing guide for high school students</span>
+      <h1>Shadowing a doctor in high school? Make every day count.</h1>
       <p class="lede">Shadow Pre-MD shows students how to prepare for a day with a physician, what to watch for, and which questions to ask. It is built on what 43 practicing physicians said about the students they host.</p>
       <div class="btn-row">
         <a href="guide.html" class="btn">Get the free guide</a>
-        <a href="survey.html" class="btn ghost">See the survey</a>
+        <a href="survey.html" class="btn ghost">See the physician survey</a>
       </div>
     </div>
     <aside class="hero-panel" aria-label="Headline survey findings">
@@ -368,29 +423,29 @@ def index():
 <section id="problem" class="band">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">The problem</span>
-      <h2>Why a shadowing spot is so hard to get and so easy to waste</h2>
+      <span class="eyebrow">Why shadowing falls short</span>
+      <h2>Why shadowing opportunities are so hard for high school students to find</h2>
       <p>Most high schoolers interested in medicine email physician after physician for a single day in a clinic. Many come away frustrated by how few chances exist and disappointed by how little the day taught them. Physicians explained why.{c(1)}</p>
     </div>
     <div class="cards">
       <div class="card problem">
         <div class="icon">{ICON_CLOCK}</div>
         <p class="num">{pct(time_n)}%</p>
-        <h3>Physicians are out of time</h3>
+        <h3>Doctors have little time to teach</h3>
         <p>Time was the barrier physicians named most. A doctor with a full clinic has few minutes left to explain what a student is watching.</p>
         <p class="of">{time_n} of {N} physicians</p>
       </div>
       <div class="card problem">
         <div class="icon">{ICON_MAP}</div>
         <p class="num">{pct(struct_n)}%</p>
-        <h3>Nobody wrote the playbook</h3>
+        <h3>Hospitals have no shadowing program</h3>
         <p>More than half said no formal shadowing structure exists, so each visit gets improvised by a physician and a student who have never done it together.</p>
         <p class="of">{struct_n} of {N} physicians</p>
       </div>
       <div class="card problem">
         <div class="icon">{ICON_LOCK}</div>
         <p class="num">{pct(pol_n)}%</p>
-        <h3>Hospital rules block the door</h3>
+        <h3>Privacy rules keep students out</h3>
         <p>Half pointed to institutional policies, and just as many to patient privacy. Unclear rules make it safer for a physician to say no.</p>
         <p class="of">{pol_n} of {N} physicians, for each</p>
       </div>
@@ -403,13 +458,13 @@ def index():
 <section id="control">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">What a student can change</span>
-      <h2>Preparation is the one barrier a student controls</h2>
+      <span class="eyebrow">What physicians look for</span>
+      <h2>What doctors want from a high school student who shadows them</h2>
       <p>No student can give a doctor more hours or rewrite a hospital's policies. Showing up ready is different. It is also what worries the physicians who have never said yes.{c(1)}</p>
     </div>
     <div class="charts">
       <figure class="chart">
-        <h3>Who worries about student preparedness</h3>
+        <h3>Which doctors worry about student preparedness</h3>
         <p class="sub">Share naming it as a barrier, by hosting experience</p>
         <ul class="bars">
           <li class="hl" title="Never hosted: 9 of 16 (56%)"><div class="lab"><span>Physicians who have never hosted</span><span class="val">9 of 16<b>56%</b></span></div><div class="track"><span class="fill" style="width:56%"></span></div></li>
@@ -418,7 +473,7 @@ def index():
         <p class="foot">Small groups, so treat the gap as a lead worth testing (Fisher exact p = .045).</p>
       </figure>
       <figure class="chart">
-        <h3>What physicians asked for most</h3>
+        <h3>Resources physicians asked for most</h3>
         <p class="sub">Top requested resources, all 43 physicians</p>
         {bars(RESOURCES[:4])}
       </figure>
@@ -430,11 +485,11 @@ def index():
 <section id="about" class="band">
   <div class="wrap split flip">
     <div class="about-photo">
-      <img src="images/zoha.webp" width="1000" height="1250" alt="Zoha, standing outdoors in a light blue shirt with pine trees and hills behind her" loading="lazy" decoding="async">
+      <img src="images/zoha-800.webp" srcset="images/zoha-480.webp 480w, images/zoha-800.webp 800w" sizes="(max-width: 860px) min(400px, calc(100vw - 40px)), 420px" width="800" height="1000" alt="Zoha Waheed, author of the Shadow Pre-MD shadowing guide, standing outdoors in a light blue shirt" loading="lazy" decoding="async">
     </div>
     <div class="about-text">
-      <span class="eyebrow">About the guide</span>
-      <h2>Meet Zoha</h2>
+      <span class="eyebrow">Who wrote the guide</span>
+      <h2>Zoha Waheed, a high school student who shadowed seven physicians</h2>
       <p class="name-line">I'm Zoha Waheed, and I went through the same search.</p>
       <p>I walked into my first endocrinology clinic knowing little more than what Google had told me the week before. Since then I have shadowed seven physicians across endocrinology, rheumatology, pulmonology, and infectious disease. Even once I had those opportunities, I found it difficult to get the most out of them.</p>
       <p>So I went looking for answers. I read five peer-reviewed studies on clinical shadowing, surveyed 43 practicing physicians about what helps and what gets in the way, and submitted my findings as a research abstract to the 2027 Medical Education Innovation Conference. I put what I learned into this guide so the next student can walk in prepared.</p>
@@ -452,21 +507,21 @@ def index():
 <section id="plan">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">The plan</span>
-      <h2>Three steps to a shadowing day that counts</h2>
+      <span class="eyebrow">How it works</span>
+      <h2>How to get more out of shadowing a doctor in three steps</h2>
       <p>You have done the hard part if a physician has said yes. Here is how to make the day worth it.</p>
     </div>
     <ol class="steps">
       <li>
-        <h3>Download the free guide</h3>
+        <h3>Download the free shadowing guide</h3>
         <p>It costs nothing. Save it before your first day in the clinic.</p>
       </li>
       <li>
-        <h3>Follow each step</h3>
+        <h3>Follow each step before your first day</h3>
         <p>Work through the guide one step at a time.</p>
       </li>
       <li>
-        <h3>Get more from your shadowing</h3>
+        <h3>Learn more from every patient you see</h3>
         <p>Walk out knowing more about medicine and about whether you want it.</p>
       </li>
     </ol>
@@ -483,12 +538,12 @@ def index():
 <section id="value" class="band">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">What makes shadowing meaningful</span>
-      <h2>Physicians rank questions far above procedures</h2>
+      <span class="eyebrow">Inside the clinic</span>
+      <h2>What to do when shadowing a doctor: watch closely and ask questions</h2>
       <p>I asked physicians which factors matter most to a student's experience. Watching patient care and asking about it came out on top. Seeing a procedure landed near the bottom.{c(1)}</p>
     </div>
     <figure class="chart">
-      <h3>Factors physicians called most important</h3>
+      <h3>What makes shadowing meaningful, according to physicians</h3>
       <p class="sub">Share of 43 physicians selecting each factor</p>
       {bars(FACTORS, hl=("Ability to ask questions",), muted=("Exposure to medical procedures",))}
     </figure>
@@ -500,20 +555,20 @@ def index():
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">What the studies found</span>
-      <h2>Three habits the research backs</h2>
+      <h2>Three research-backed habits for a better shadowing experience</h2>
       <p>The guide also leans on published studies of students in clinical settings. These findings came up again and again.</p>
     </div>
     <div class="cards">
       <div class="card">
-        <h3>Write about each day</h3>
+        <h3>Keep a shadowing journal</h3>
         <p>Keep a journal or take notes while you shadow. Written reflection helps students analyze what they saw and spot what they still need to learn.{c(2)}{c(3)}</p>
       </div>
       <div class="card">
-        <h3>Ask your questions</h3>
+        <h3>Ask the doctor your questions</h3>
         <p>Students who take the initiative and ask, instead of staying silent, get more value from the experience.{c(4)}</p>
       </div>
       <div class="card">
-        <h3>Know the plan for the day</h3>
+        <h3>Learn the plan before the day starts</h3>
         <p>Shadowing works better when the student is introduced to the team and the patients, and a clear structure is set from the start.{c(4)}</p>
       </div>
     </div>
@@ -524,7 +579,7 @@ def index():
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Why this guide exists</span>
-      <h2>Physicians want to teach. They need students who come ready.</h2>
+      <h2>Why prepared students learn more from the same clinic day</h2>
     </div>
     <div class="explain">
       <p>A shadowing day is your first real look at the career you are thinking about giving your life to. Physicians want to give you that look. In the survey, {likely_hi} of {N} said they would likely host a student if the right resources existed, and {USEFUL[3] + USEFUL[4]} of {N} rated standardized shadowing guidelines as highly useful.</p>
@@ -537,7 +592,7 @@ def index():
   <div class="wrap split">
     <div>
       <span class="eyebrow">After a good shadowing experience</span>
-      <h2>From frustrated to certain about what comes next</h2>
+      <h2>How shadowing helps a student decide on a career in medicine</h2>
       <p>I started this search disappointed and frustrated. A day used well can settle the question you came in with.</p>
       <div class="btn-row">
         <a href="guide.html" class="btn light">Get the free guide</a>
@@ -554,8 +609,8 @@ def index():
 
 <section class="closing">
   <div class="wrap">
-    <h2>Make your next shadowing day count</h2>
-    <p>The guide is free. Read it before you walk into the clinic.</p>
+    <h2>Get the free medical shadowing guide for high school students</h2>
+    <p>Read it before you walk into the clinic.</p>
     <div class="btn-row">
       <a href="guide.html" class="btn">Get the free guide</a>
     </div>
@@ -615,14 +670,16 @@ def survey():
     likely_hi = LIKELY[3] + LIKELY[4]
     b = dict((l, (t, nv, hs)) for l, t, nv, hs in BARRIERS)
     time_n = b["Lack of physician time"][0]
-    return head("The Physician Survey | Shadow Pre-MD",
-                "What 43 practicing physicians said about hosting high school students: the barriers, the resources they want, and what makes shadowing meaningful.") + nav("survey.html") + f"""
+    t, d = ("Physician Shadowing Survey: What 43 Doctors Said | Shadow Pre-MD",
+            "A survey of 43 physicians on high school shadowing: why doctors say no, what makes a shadowing day meaningful, and what they want students to know.")
+    return head(t, d, "survey.html", [page_schema("Article", "survey.html", "Physician Shadowing Survey: What 43 Doctors Said", d,
+                {"image": SITE + "images/og.jpg", "publisher": {"@id": SITE + "#zoha"}}), crumbs("Physician Survey", "survey.html")]) + nav("survey.html") + f"""
 <main id="main">
 
 <header class="page-hero">
   <div class="wrap">
     <span class="eyebrow">The physician survey</span>
-    <h1>I asked 43 physicians why shadowing is so hard to get right</h1>
+    <h1>I asked 43 physicians about letting high school students shadow them</h1>
     <p class="lede">Students can't fix a problem nobody has measured. So I surveyed practicing physicians about what stops them from hosting high schoolers, what makes a shadowing day worth it, and what would help. Here is what they told me.</p>
     <div class="btn-row">
       <a href="guide.html" class="btn">Get the free guide</a>
@@ -633,7 +690,7 @@ def survey():
 
 <section class="band" id="open">
   <div class="wrap">
-    {sec("01", "The Door Is Open", "Physicians want to teach",
+    {sec("01", "Most Physicians Are Willing to Let Students Shadow", "72% would likely host with the right support",
          "Most of the physicians I surveyed want students in their clinics. More than half chose the highest possible rating when I asked how likely they would be to host a student with the right support. The willingness is already there. Everything around it is missing.")}
     {stats([(f"{pct(likely_hi)}%", "would likely host a high school student if the right resources were available."),
             (f"{pct(useful_hi)}%", "rated standardized shadowing guidelines a 4 or 5 out of 5 for usefulness."),
@@ -657,14 +714,14 @@ def survey():
 
 <section id="barriers">
   <div class="wrap">
-    {sec("02", "What Stands in the Way", "Time, structure, and red tape",
+    {sec("02", "The Biggest Barriers to Physician Shadowing", "Time, structure, and hospital policy",
          "When I asked what gets in the way, time came first. A physician with a full clinic has few minutes to spare. Look past time, though, and the next four barriers all describe the same gap: no program to follow, unclear hospital policies, and no guidance on privacy or liability. A well-built program can close that gap.")}
     {stats([(f"{pct(time_n)}%", f"named lack of physician time, the most common barrier ({time_n} of {N})."),
             (f"{pct(24)}%", "said no formal shadowing structure exists for them to follow."),
             ("22 + 22", "named hospital policies and patient privacy, tied for third.")])}
     <div class="charts duo">
       <figure class="chart">
-        <h3>The leading barrier</h3>
+        <h3>The leading barrier: physician time</h3>
         <p class="sub">Physicians naming lack of time</p>
         {donut([("Named time", time_n, "#C2571F"), ("Did not", N - time_n, GREY)],
                f"{pct(time_n)}%", "short on time", "79 percent of physicians named lack of time as a barrier")}
@@ -681,7 +738,7 @@ def survey():
 
 <section class="band" id="never">
   <div class="wrap">
-    {sec("03", "Who Stays Out", "The 16 physicians who have never hosted",
+    {sec("03", "Why Some Doctors Have Never Hosted a Student", "What worries the 16 physicians who never said yes",
          "Sixteen of the physicians I surveyed had never hosted a high school student. They are the doctors students most need to reach, so I looked at what holds them back. Hospital policies and doubts about student preparedness worried them far more than they worried experienced hosts.")}
     {stats([("75%", "of never-hosts named hospital policies, against 37% of experienced hosts."),
             ("56%", "of never-hosts named student preparedness, against 22% of experienced hosts."),
@@ -714,14 +771,14 @@ def survey():
 
 <section id="meaning">
   <div class="wrap">
-    {sec("04", "What Makes a Day Meaningful", "Questions over procedures",
+    {sec("04", "What Makes a Shadowing Experience Meaningful", "Physicians chose questions over procedures",
          "Students often assume the best shadowing day is the one with the most dramatic procedure. Physicians see it differently. They told me the value comes from watching patient care up close and asking about it.")}
     {stats([(f"{FACTORS[0][1]} of {N}", "chose direct observation of patient care as a top factor."),
             (f"{FACTORS[1][1]} of {N}", "chose the ability to ask questions."),
             (f"{FACTORS[7][1]} of {N}", "chose exposure to medical procedures.")])}
     <div class="charts duo">
       <figure class="chart">
-        <h3>The top factor</h3>
+        <h3>The top factor: watching patient care</h3>
         <p class="sub">Physicians choosing direct observation</p>
         {donut([("Chose it", FACTORS[0][1], MID), ("Did not", N - FACTORS[0][1], GREY)],
                f"{pct(FACTORS[0][1])}%", "direct observation", "70 percent of physicians chose direct observation of patient care")}
@@ -738,14 +795,14 @@ def survey():
 
 <section class="band" id="asked">
   <div class="wrap">
-    {sec("05", "What Physicians Asked For", "Prepared students and clear rules",
+    {sec("05", "What Doctors Want Students to Know Before Shadowing", "Prepared students and clear rules",
          "I asked physicians what would make hosting easier. Their top answer was a student who arrives already oriented. That answer is why Shadow Pre-MD exists. Preparation is the one part of this problem a student can solve alone.")}
     {stats([(f"{pct(RESOURCES[0][1])}%", "asked for a student orientation program or handbook."),
             (f"{pct(RESOURCES[1][1])}%", "asked for clear institutional guidelines on what students may observe."),
             (f"{pct(RESOURCES[2][1])}%", "asked for suggested questions or discussion topics.")])}
     <div class="charts duo">
       <figure class="chart">
-        <h3>The top request</h3>
+        <h3>The top request: a student handbook</h3>
         <p class="sub">Physicians asking for a student handbook</p>
         {donut([("Asked for it", RESOURCES[0][1], DK), ("Did not", N - RESOURCES[0][1], GREY)],
                f"{pct(RESOURCES[0][1])}%", "want a handbook", "65 percent of physicians asked for a student orientation handbook")}
@@ -764,7 +821,7 @@ def survey():
 
 <section id="sample">
   <div class="wrap">
-    {sec("06", "Who Answered", "Read these numbers with care",
+    {sec("06", "Who Took the Physician Shadowing Survey", "How to read these results",
          "I want these results read honestly. Forty-three physicians is enough to see patterns and too few to speak for every doctor. Most of my respondents practiced internal medicine, and physicians who answer a survey about shadowing may already care more about teaching.")}
     {stats([(f"{N}", "practicing physicians completed the survey."),
             (f"{HOSTS}", "had hosted a high school student before."),
@@ -796,7 +853,7 @@ def survey():
 <section class="after glance">
   <div class="wrap">
     <span class="eyebrow">The survey in one glance</span>
-    <h2>Physicians are willing. Students can meet them halfway.</h2>
+    <h2>Physician shadowing survey results at a glance</h2>
     <ul class="glance-grid">
       <li><span class="n">{pct(time_n)}%</span><span class="t">named lack of time as a barrier</span></li>
       <li><span class="n">{pct(likely_hi)}%</span><span class="t">would likely host with the right resources</span></li>
@@ -855,17 +912,19 @@ def results():
     qs.append(q(10, "How likely would you be to host a high school student if appropriate resources were available?", "Scale from 1 to 5.",
                 columns(LIKELY, "Not likely", "Very likely"),
                 "40 of 43 (93%) chose 3 or higher. The stricter count of 4 or 5 is used across this site."))
-    return head("Every Question and Answer | Shadow Pre-MD",
-                "Question-by-question results from a survey of 43 practicing physicians on high school medical shadowing.") + nav("results.html") + f"""
+    t, d = ("Physician Shadowing Survey Results by Question | Shadow Pre-MD",
+            "Every question from a survey of 43 physicians on high school medical shadowing, with the count and share for each answer and a split by hosting experience.")
+    return head(t, d, "results.html", [page_schema("Article", "results.html", "Physician Shadowing Survey Results by Question", d,
+                {"image": SITE + "images/og.jpg", "publisher": {"@id": SITE + "#zoha"}}), crumbs("Survey Results", "results.html")]) + nav("results.html") + f"""
 <main id="main">
 
 <header class="page-hero">
   <div class="wrap">
-    <span class="eyebrow">The results</span>
-    <h1>Every question, and how 43 physicians answered</h1>
+    <span class="eyebrow">Survey results</span>
+    <h1>Physician shadowing survey results, question by question</h1>
     <p class="lede">Each chart below shows one survey question with the count and share for every answer. The second half breaks the answers down by whether the physician had hosted a student before.</p>
     <div class="btn-row">
-      <a href="survey.html" class="btn ghost">Read the five findings</a>
+      <a href="survey.html" class="btn ghost">Read the survey findings</a>
       <a href="guide.html" class="btn">Get the free guide</a>
     </div>
   </div>
@@ -875,7 +934,7 @@ def results():
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">All 43 physicians</span>
-      <h2>Question by question</h2>
+      <h2>How physicians answered each shadowing question</h2>
       <p>Percentages are out of all 43 respondents unless the chart says otherwise.</p>
     </div>
 {''.join(qs).replace('<figure class="chart stack" id="q1">', '<figure class="chart" id="q1">', 1)}
@@ -886,7 +945,7 @@ def results():
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">By hosting experience</span>
-      <h2>How the two groups answered</h2>
+      <h2>Doctors who have hosted students compared with those who have not</h2>
       <p>{HOSTS} physicians had hosted a high school student and {NEVER} never had. Splitting the answers shows what keeps physicians from hosting for the first time.</p>
     </div>
     <figure class="chart">
@@ -926,7 +985,7 @@ def results():
     </figure>
     <div class="btn-row">
       <a href="guide.html" class="btn">Get the free guide</a>
-      <a href="survey.html" class="btn ghost">Read the five findings</a>
+      <a href="survey.html" class="btn ghost">Read the survey findings</a>
     </div>
   </div>
 </section>

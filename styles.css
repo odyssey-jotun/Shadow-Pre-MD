@@ -1,3 +1,5 @@
+@font-face{ font-family:'Newsreader'; font-style:normal; font-weight:600 700; font-display:swap; src:url(fonts/newsreader-normal.woff2) format('woff2'); }
+@font-face{ font-family:'DM Sans'; font-style:normal; font-weight:400 700; font-display:swap; src:url(fonts/dm-sans-normal.woff2) format('woff2'); }
 /* ------------------------------------------------------------------
    Shadow Pre-MD shared styles.
    Palette: cool paper, deep clinic teal, warm rust accent.
@@ -317,8 +319,8 @@ section{ padding: var(--flow-section) 0; }
 
 /* waffle */
 .waffle{ display:grid; grid-template-columns: repeat(11, 1fr); gap: 7px; max-width: 420px; margin: 0; padding: 0; list-style: none; }
-.waffle li{ aspect-ratio: 1/1; border-radius: 50%; background: var(--c1); }
-.waffle li.never{ background: var(--c2); border-radius: 3px; transform: rotate(45deg) scale(0.8); }
+  .waffle span{ aspect-ratio: 1/1; border-radius: 50%; background: var(--c1); }
+.waffle span.never{ background: var(--c2); border-radius: 3px; transform: rotate(45deg) scale(0.8); }
 
 /* pairs: barrier to resource */
 .pairs{ list-style:none; margin:0; padding:0; display:grid; gap: 14px; }
@@ -447,10 +449,13 @@ footer ul a{ display:inline-flex; align-items:center; min-height: 44px; }
   .strip.four li:nth-child(3){ border-left: 0; }
   .strip.four li:nth-child(n+3){ border-top: 1px solid var(--line); }
 }
-@media (max-width: 720px){
+@media (max-width: 900px){
   nav.site ul{ order: 3; width: 100%; justify-content: space-between; gap: 0; border-top: 1px solid var(--line); margin-top: 2px; }
-  nav.site ul a{ padding: 0 6px; font-size: 0.88rem; }
+  nav.site ul a{ padding: 0 4px; font-size: 0.86rem; }
   html{ scroll-padding-top: 130px; }
+}
+@media (min-width: 560px) and (max-width: 900px){
+  nav.site ul{ justify-content: flex-start; gap: 18px; }
 }
 @media (max-width: 620px){
   :root{ --flow-section: 54px; --flow-block: 34px; }
@@ -503,7 +508,7 @@ footer ul a{ display:inline-flex; align-items:center; min-height: 44px; }
   background: var(--primary-dk); color: #FFFFFF; border-radius: 18px;
 }
 .band-quote:before{ content: "\201C"; position:absolute; left: 28px; top: 14px; font-family:'Newsreader', Georgia, serif; font-size: 4.2rem; line-height: 1; color: var(--accent-dark-bg); }
-.band-quote p{ font-family:'Newsreader', Georgia, serif; font-style: italic; font-weight: 500; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.38; margin: 0; max-width: 40em; }
+.band-quote p{ font-family:'Newsreader', Georgia, serif; font-style: italic; font-weight: 600; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.38; margin: 0; max-width: 40em; }
 .band-quote cite{ display:block; margin-top: 12px; font-style: normal; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-dark-bg); }
 
 .sub-h{ font-size: 1.3rem; margin: var(--flow-block) 0 16px; }
@@ -517,7 +522,10 @@ footer ul a{ display:inline-flex; align-items:center; min-height: 44px; }
 .btn.ghost.on-dark:hover{ background: var(--on-dark); color: var(--primary-dk); }
 
 @media (max-width: 860px){
-  .stats, .charts.duo{ grid-template-columns: 1fr; }
+  .charts.duo{ grid-template-columns: 1fr; }
+}
+@media (max-width: 700px){
+  .stats{ grid-template-columns: 1fr; }
 }
 @media (max-width: 620px){
   .sec-head{ grid-template-columns: 1fr; gap: 4px; }
