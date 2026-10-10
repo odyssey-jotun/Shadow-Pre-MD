@@ -401,6 +401,12 @@ def c(n):
     return f'<a class="cite" href="#r{n}"><span class="sr-only">See reference </span>{n}</a>'
 
 
+VIDEO_LD = {"@type": "VideoObject", "@id": SITE + "#video", "name": "Why I surveyed 43 doctors about shadowing",
+            "description": "Zoha Waheed on the shadowing day that made her want to become a doctor, and what 43 physicians told her about hosting high school students.",
+            "thumbnailUrl": SITE + "images/video-poster.webp", "contentUrl": SITE + "video/zoha-shadowing-story.mp4",
+            "uploadDate": "2026-10-09", "duration": "PT58S", "inLanguage": "en-US", "author": {"@id": SITE + "#zoha"}}
+
+
 # ---------------------------------------------------------------- index
 def index():
     b = dict((l, t) for l, t, *_ in BARRIERS)
@@ -409,7 +415,7 @@ def index():
     handbook = RESOURCES[0][1]
     t, d = ("How to Shadow a Doctor in High School | Shadow Pre-MD",
             "A free guide to shadowing a doctor in high school: how to prepare, what to watch, and which questions to ask. Built from a survey of 43 physicians.")
-    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"})], hero="hero-student-doctor") + nav("index.html") + f"""
+    return head(t, d, "", [page_schema("WebPage", "", t, d, {"about": "Medical shadowing for high school students"}), VIDEO_LD], hero="hero-student-doctor") + nav("index.html") + f"""
 <main id="main">
 
 <header class="hero">
@@ -503,6 +509,15 @@ def index():
     </div>
   </div>
   <div class="wrap">
+    <figure class="story-video">
+      <video controls preload="none" playsinline width="1920" height="1080" poster="images/video-poster.webp" aria-label="Zoha Waheed explains why she surveyed 43 doctors about shadowing">
+        <source src="video/zoha-shadowing-story.mp4" type="video/mp4">
+      </video>
+    </figure>
+    <div class="btn-row">
+      <a href="survey.html" class="btn">See what 43 doctors told me</a>
+      <a href="downloads/shadowing-a-doctor-guide.pdf" download class="btn ghost">Get the free guide</a>
+    </div>
     <ul class="strip">
       <li><span class="n">7</span><span class="t">physicians shadowed across four specialties</span></li>
       <li><span class="n">5</span><span class="t">peer-reviewed studies reviewed</span></li>
